@@ -23,9 +23,9 @@ On the way ...
 ## I would like to become a part of the development team!
 
 Welcome :star_struck:! We are looking for talented developers to join us and making WUI better! If you care to join the development team, please
-reach out to us, you are more than welcomed to join us! ![](https://gw.alipayobjects.com/os/lib/twemoji/11.2.0/2/svg/2764.svg#height=18&id=kSl2h&originHeight=150&originWidth=150&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=18)
+reach out to us, you are more than welcomed to join us! 
 
-We are now lacking of experts of `Testing`, `GitHub Actions`, `PM`, if you do feel like you can and willing to help us, please do reach out to us. ![](https://gw.alipayobjects.com/os/lib/twemoji/11.2.0/2/svg/1f64f.svg#height=18&id=vj87I&originHeight=150&originWidth=150&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=18)
+We are now lacking of experts of `Testing`, `GitHub Actions`, `PM`, if you do feel like you can and willing to help us, please do reach out to us.
 
 ## Contributors
 
