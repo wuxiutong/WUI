@@ -1,0 +1,30 @@
+{
+  "name": "@easyest/utils",
+  "version": "1.0.0",
+  "description": "A vue3+ts ui component lib utils!",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "scripts": {
+    "build": "vite build"
+  },
+  "files": [
+    "es",
+    "lib"
+  ],
+  "keywords": [
+    "vue3",
+    "tree",
+    "ts"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "author": "wuxiutong",
+  "license": "MIT",
+  "typings": "es/index.d.ts",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "typescript": "^5.3.3",
+    "vue": "3.4.21"
+  }
+}
