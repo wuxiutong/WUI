@@ -23,7 +23,7 @@ On the way ...
 ## I would like to become a part of the development team!
 
 Welcome :star_struck:! We are looking for talented developers to join us and making WUI better! If you care to join the development team, please
-reach out to us, you are more than welcomed to join us! 
+reach out to us, you are more than welcomed to join us!
 
 We are now lacking of experts of `Testing`, `GitHub Actions`, `PM`, if you do feel like you can and willing to help us, please do reach out to us.
 
@@ -39,3 +39,8 @@ And thank you to all our backers! 🙏
 
 WUI is open source software licensed as
 [MIT](https://github.com/wuxiutong/WUI/blob/main/LICENSE).
+
+## Changes
+
+The following is the change log
+[CHANGES](https://github.com/wuxiutong/WUI/blob/main/CHANGES).

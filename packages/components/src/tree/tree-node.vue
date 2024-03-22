@@ -8,7 +8,7 @@
           @click.stop="treeExpanderClick(treeNode)">
           <!-- 展开状态减号图标 -->
           <svg v-if="treeNode.expanded && showLine" class="z-tree-node-anchor-arrow-expander-minus"
-            xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 12 12">
+            xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="-2 -2 16 16">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5"
               d="M 1.2595435,6.004727 H 10.740457"
               style="stroke-width:0.509454;stroke-linecap:square;stroke-dasharray:none" />
@@ -20,9 +20,13 @@
           </svg>
           <!-- 折叠状态加号 -->
           <svg xmlns="http://www.w3.org/2000/svg" v-if="showLine && !treeNode.expanded"
-            class="z-tree-node-anchor-arrow-expander-plus" width="100%" height="100%" viewBox="0 0 256 256">
-            <path fill="currentColor"
-              d="M222 128a6 6 0 0 1-6 6h-82v82a6 6 0 0 1-12 0v-82H40a6 6 0 0 1 0-12h82V40a6 6 0 0 1 12 0v82h82a6 6 0 0 1 6 6" />
+            class="z-tree-node-anchor-arrow-expander-plus" width="100%" height="100%" viewBox="-1 -1 14 14">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M 5.994727,1.254727 V 10.73564" id="path1-8"
+              style="stroke-width:0.509454;stroke-linecap:square;stroke-dasharray:none" />
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M 1.2595435,6.004727 H 10.740457" id="path1"
+              style="stroke-width:0.509454;stroke-linecap:square;stroke-dasharray:none" />
           </svg>
           <svg v-if="!showLine && !treeNode.expanded" class="z-tree-node-anchor-arrow-expander-arrow-right" width="12"
             height="12" version="1.1" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +128,7 @@ const props = withDefaults(defineProps<TreeItemProps>(), {
   showLine: true,
   expandAll: false,
   multipleCheck: true,
-  onlyLeafCheck: false,
+  onlyLeafCheck: true,
   enableDblclick: false,
   enableWholeAnchorStatus: false,
   enableCheckConfirm: false,

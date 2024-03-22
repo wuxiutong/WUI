@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<TreeProps>(), {
   expandAll: false,
   checkedAll: false,
   multipleCheck: true,
-  onlyLeafCheck: false,
+  onlyLeafCheck: true,
   enableDblclick: false,
   enableWholeAnchorStatus: false,
   enableCheckConfirm: false,
@@ -352,15 +352,20 @@ function refreshExpandNodes() {
  * 2、单选模式下点击，执行操作为选中/取消选中
  */
 function treeNodeClickEvent(node: TreeNodeData, $event: MouseEvent) {
-  console.log('点击：' + node.expanded)
-  console.log('节点点击模式：' + props.nodeContentClickAction)
+  //console.log('点击：' + node.expanded)
+  //console.log('节点点击模式：' + props.nodeContentClickAction)
   // 节点内容点击事件不执行任何操作
   if (props.nodeContentClickAction === TreeNodeContentClickActionEnum.NONE) {
     emit('tree-node-click', node, $event)
   } else
     // 节点内容点击事件为勾选
     if (props.nodeContentClickAction === TreeNodeContentClickActionEnum.CHECK) {
-      if (node.disabled) {
+      if (props.onlyLeafCheck && node.children && node.children.length > 0) {
+        // 如果设置的仅勾选末级，则上级点击时自动展开或折叠
+        node.expanded = !node.expanded
+        emit('tree-node-click', node, $event)
+        return false
+      } else if (node.disabled) {
         return false
       } else {
         checkboxClickEvent(node, $event)
@@ -379,7 +384,7 @@ function treeNodeClickEvent(node: TreeNodeData, $event: MouseEvent) {
  * 节点双击事件
  */
 function treeNodeDblclickEvent(node: TreeNodeData) {
-  console.log('z-tree[双击]节点事件：', node)
+  //console.log('z-tree[双击]节点事件：', node)
   if (props.enableDblclick) {
     if (props.onlyLeafCheck) {
       if (node.children && node.children.length > 0) {
@@ -429,7 +434,7 @@ function nodeCheckOperate(node: TreeNodeData) {
       if (node.checked !== 1) {
         // 1.1、单选模式下，清空其他选择项目，仅保留当前选择项
         if (!props.multipleCheck) {
-          console.log('单选模式')
+          //console.log('单选模式')
           // 1.1.1、如果单选模式下，仅选择叶子节点模式，并且当前节点有子节点，则不改变当前选择状态
           if (props.onlyLeafCheck && node.children && node.children.length > 0) {
             return false
@@ -451,7 +456,7 @@ function nodeCheckOperate(node: TreeNodeData) {
             }
           }
         } else {
-          console.log('多选模式')
+          //console.log('多选模式')
           // 1.2、多选模式下，添加选择项目
           let exist = false
           treeNodeChecked.value.some((item) => {
@@ -471,7 +476,7 @@ function nodeCheckOperate(node: TreeNodeData) {
           }
           // 级联模式下，勾选子节点及父节点
           if (props.cascade) {
-            console.log('勾选级联处理')
+            //console.log('勾选级联处理')
             node.checked = 1
             // 多选模式下才执行上下层级联动勾选
             if (props.multipleCheck) {
@@ -483,7 +488,7 @@ function nodeCheckOperate(node: TreeNodeData) {
               }
             }
           } else {
-            console.log('非勾选级联处理')
+            //console.log('非勾选级联处理')
             if (
               !props.onlyLeafCheck ||
               (props.onlyLeafCheck && (!node.children || node.children.length <= 0))
@@ -493,7 +498,7 @@ function nodeCheckOperate(node: TreeNodeData) {
           }
         }
       } else {
-        console.log('取消勾选')
+        //console.log('取消勾选')
         //2、取消勾选处理
         treeNodeChecked.value.some((item) => {
           if (item.id === node.id) {
@@ -507,7 +512,7 @@ function nodeCheckOperate(node: TreeNodeData) {
         if (props.cascade) {
           // 多选模式下才执行上下层级联动勾选
           if (props.multipleCheck) {
-            console.log('取消勾选级联处理')
+            //console.log('取消勾选级联处理')
             if (node.children && node.children.length > 0) {
               changeChildrenCheckedStatus(node, node.checked)
             }

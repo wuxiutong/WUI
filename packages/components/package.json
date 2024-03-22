@@ -1,11 +1,14 @@
 {
-  "name": "@WUI/components",
-  "version": "1.0.0",
+  "name": "@wuxiutong/wui",
+  "version": "0.1.1",
   "description": "A vue3+ts ui component lib,include tree,selectTree and than!",
   "main": "lib/index.js",
   "module": "es/index.js",
   "scripts": {
     "build": "vite build"
+  },
+  "publicConfig": {
+    "registry": "http://registry.npmjs.org/"
   },
   "files": [
     "es",
