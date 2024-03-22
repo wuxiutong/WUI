@@ -1,0 +1,1 @@
+"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const e=require("./src/index.js"),n=require("./src/tree/type.js"),o=require("./src/tree/index.js"),r={install:t=>{for(let i in e)t.use(e[i])}};exports.TreeNodeContentClickActionEnum=n.TreeNodeContentClickActionEnum;exports.WuiTree=o.WuiTree;exports.default=r;

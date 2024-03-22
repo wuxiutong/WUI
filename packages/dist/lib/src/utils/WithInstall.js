@@ -1,0 +1,1 @@
+"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const t=e=>(e.install=l=>{const n=e.name;l.component(n,e)},e);exports.default=t;exports.withInstall=t;

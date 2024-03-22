@@ -1,0 +1,230 @@
+.z-tree {
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+  /*
+		展开和折叠的动画
+	*/
+  /*
+    内容为空的提示
+  */
+}
+.z-tree .z-tree-node {
+  width: auto;
+  height: auto;
+  position: relative;
+  margin: calc((2 / 14) * 1em);
+}
+.z-tree .z-tree-node .z-tree-node-child {
+  width: auto;
+  height: auto;
+  position: relative;
+  padding-left: calc(22 / 14 * 1em);
+}
+.z-tree .z-tree-node .z-tree-node-anchor {
+  height: 2em;
+  display: inline-flex;
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  align-items: center;
+  border-radius: 2px;
+  /**
+			* 勾选框区域
+			*/
+  /**
+			* 显示内容区域
+			*/
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow {
+  height: cacl(18em / 14);
+  width: calc(1em * 18 / 14);
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-expander {
+  height: calc(1em * 18 / 14);
+  width: calc(1em * 18 / 14);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-expander .z-tree-node-anchor-arrow-expander-plus,
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-expander .z-tree-node-anchor-arrow-expander-minus {
+  width: calc(1em * 16 / 14);
+  height: calc(1em * 16 / 14);
+  border: 1px solid #6e6e6e;
+  color: #6e6e6e;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-expander .z-tree-node-anchor-arrow-expander-arrow-down,
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-expander .z-tree-node-anchor-arrow-expander-arrow-right {
+  width: calc(1em * 16 / 14);
+  height: calc(1em * 16 / 14);
+  color: #a4a4a4;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-nochild {
+  border: none;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin: 0;
+  margin-right: calc((5 / 14) * 1em);
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-nochild svg {
+  width: calc(1em * 18 / 14);
+  height: calc(1em * 18 / 14);
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-arrow .z-tree-node-anchor-arrow-nochild .z-tree-node-anchor-arrow-nochild-noicon {
+  width: calc(1em * 18 / 14);
+  height: calc(1em * 18 / 14);
+  padding: 0;
+  margin: 0;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-checkbox {
+  margin: 0;
+  width: calc(1em * 20 / 14);
+  height: calc(1em * 20 / 14);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-right: 0;
+  margin-left: calc((4 / 14) * 1em);
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon {
+  margin: 0;
+  width: calc(1em * 20 / 14);
+  height: calc(1em * 20 / 14);
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-checked,
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-half-checked {
+  margin: 0;
+  width: calc(1em * 20 / 14);
+  height: calc(1em * 20 / 14);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  padding: 0;
+  border: 1px solid rgba(var(--theme-primary-color, 237, 3, 9), 1);
+  border-radius: 2px;
+  background-color: rgba(var(--theme-primary-color, 237, 3, 9), 1);
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-unchecked {
+  margin: 0;
+  padding: 0;
+  width: calc(1em * 20 / 14);
+  height: calc(1em * 20 / 14);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #6e6e6e;
+  border-radius: 2px;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-checkbox-disabled {
+  cursor: not-allowed;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-content {
+  cursor: text;
+  display: flex;
+  font-size: inherit;
+  color: #6e6e6e;
+  padding: 0;
+  padding-left: calc((6 / 14) * 1em);
+  align-items: center;
+  flex-direction: row;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-content .z-tree-node-anchor-content-default {
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+}
+.z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-content .z-tree-node-anchor-content-default .z-tree-node-anchor-content-label {
+  white-space: nowrap;
+  width: auto;
+  text-overflow: ellipsis;
+}
+.z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-checkbox {
+  cursor: not-allowed;
+}
+.z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-checked,
+.z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-half-checked {
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(var(--theme-primary-color, 237, 3, 9), 0.6);
+  color: rgba(var(--theme-primary-color, 237, 3, 9), 0.6);
+}
+.z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-unchecked {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  border: 1px solid rgba(110, 110, 110, 0.4);
+  color: rgba(var(--theme-primary-color, 237, 3, 9), 1);
+}
+.z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-separator,
+.z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-id,
+.z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-label {
+  color: #c6c6c6;
+  white-space: pre;
+}
+.z-tree .z-tree-node .z-tree-node-anchor:hover {
+  background: rgba(var(--theme-primary-color, 237, 3, 9), 20%);
+}
+.z-tree .z-tree-node .z-tree-node-anchor-selected {
+  background-color: rgba(var(--theme-primary-color, 237, 3, 9), 0.453);
+}
+.z-tree .z-tree-node-child .z-tree-node-line::before {
+  content: '';
+  position: absolute;
+  width: 1px;
+  top: calc(-7 / 14 * 1em);
+  bottom: 6px;
+  left: calc(-15 / 14 * 1em);
+  height: auto;
+  border-left: 1px dashed #c6c6c6;
+}
+.z-tree .z-tree-node-child .z-tree-node-line:last-child::before {
+  height: calc(20 / 14 * 1em);
+}
+.z-tree .z-tree-node-child > .z-tree-node-line::after {
+  content: '';
+  position: absolute;
+  width: 1em;
+  top: calc(13 / 14 * 1em);
+  bottom: 0;
+  left: -1em;
+  height: 1px;
+  border-top: 1px dashed #c6c6c6;
+}
+.z-tree .z-tree-node-child > .z-tree-node-line .z-tree-node-anchor-arrow-nochild-noicon::before {
+  content: '';
+  position: absolute;
+  width: 17px;
+  top: 12px;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  border-top: 1px dashed #c6c6c6;
+}
+.z-tree .slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+.z-tree .slide-fade-leave-active {
+  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.z-tree .slide-fade-enter-from,
+.z-tree .slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+.z-tree .z-tree-empty-tips {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6e6e6e;
+}

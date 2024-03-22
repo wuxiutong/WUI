@@ -1,0 +1,284 @@
+.z-tree {
+  @arrow-icon-color-arrow: #a4a4a4;
+  @arrow-icon-color-plus-minus: #6e6e6e;
+  @content-color: #6e6e6e;
+  @default-font-size: 14px;
+  @default-theme-color: 237, 3, 9;
+  @--font-size: var(--theme-font-size, @default-font-size);
+  @--theme-color: var(--theme-primary-color, @default-theme-color);
+  @border-color: #c6c6c6;
+  @--wui-theme-color: @--theme-color;
+
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+
+  .z-tree-node {
+    width: auto;
+    height: auto;
+    position: relative;
+    margin: calc((2 / 14) * 1em);
+
+    // 子节点
+    .z-tree-node-child {
+      width: auto;
+      height: auto;
+      position: relative;
+      padding-left: calc(22 / 14 * 1em);
+    }
+
+    .z-tree-node-anchor {
+      height: 2em;
+      display: inline-flex;
+      width: 100%;
+      position: relative;
+      cursor: pointer;
+      align-items: center;
+      border-radius: 2px;
+
+      // 折叠图标区域
+      .z-tree-node-anchor-arrow {
+        height: cacl(1em * 18 / 14);
+        width: calc(1em * 18 / 14);
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+
+        .z-tree-node-anchor-arrow-expander {
+          height: calc(1em * 18 / 14);
+          width: calc(1em * 18 / 14);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .z-tree-node-anchor-arrow-expander-plus,
+          .z-tree-node-anchor-arrow-expander-minus {
+            width: calc(1em * 16 / 14);
+            height: calc(1em * 16 / 14);
+            border: 1px solid @arrow-icon-color-plus-minus;
+            color: @arrow-icon-color-plus-minus;
+          }
+
+          .z-tree-node-anchor-arrow-expander-arrow-down,
+          .z-tree-node-anchor-arrow-expander-arrow-right {
+            width: calc(1em * 16 / 14);
+            height: calc(1em * 16 / 14);
+            color: @arrow-icon-color-arrow;
+          }
+        }
+
+        .z-tree-node-anchor-arrow-nochild {
+          border: none;
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          margin: 0;
+          margin-right: calc((5 / 14) * 1em);
+
+          svg {
+            width: calc(1em * 18 / 14);
+            height: calc(1em * 18 / 14);
+          }
+
+          .z-tree-node-anchor-arrow-nochild-noicon {
+            width: calc(1em * 18 / 14);
+            height: calc(1em * 18 / 14);
+            padding: 0;
+            margin: 0;
+          }
+        }
+      }
+
+      /**
+			* 勾选框区域
+			*/
+      .z-tree-node-anchor-checkbox {
+        margin: 0;
+        width: calc(1em * 20 / 14);
+        height: calc(1em * 20 / 14);
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        margin-right: 0;
+        margin-left: calc((4 / 14) * 1em);
+
+        .z-tree-node-anchor-checkbox-icon {
+          margin: 0;
+          width: calc(1em * 20 / 14);
+          height: calc(1em * 20 / 14);
+
+          .z-tree-node-anchor-checkbox-icon-checked,
+          .z-tree-node-anchor-checkbox-icon-half-checked {
+            margin: 0;
+            width: calc(1em * 20 / 14);
+            height: calc(1em * 20 / 14);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 0;
+            border: 1px solid rgba(@--wui-theme-color, 1);
+            border-radius: 2px;
+            background-color: rgba(@--wui-theme-color, 1);
+          }
+
+          .z-tree-node-anchor-checkbox-icon-unchecked {
+            margin: 0;
+            padding: 0;
+            width: calc(1em * 20 / 14);
+            height: calc(1em * 20 / 14);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid @content-color;
+            border-radius: 2px;
+          }
+        }
+      }
+
+      .z-tree-node-anchor-checkbox-disabled {
+        cursor: not-allowed;
+      }
+
+      /**
+			* 显示内容区域
+			*/
+      .z-tree-node-anchor-content {
+        cursor: text;
+        display: flex;
+        font-size: inherit;
+        color: @content-color;
+        padding: 0;
+        padding-left: calc((6 / 14) * 1em);
+        align-items: center;
+        flex-direction: row;
+
+        .z-tree-node-anchor-content-default {
+          text-wrap: nowrap;
+          text-overflow: ellipsis;
+
+          .z-tree-node-anchor-content-label {
+            white-space: nowrap;
+            width: auto;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+
+    // 不可用状态,边框颜色变灰，字体颜色变灰色，勾选颜色深黑色
+    .z-tree-node-anchor-disabled {
+      .z-tree-node-anchor-checkbox {
+        cursor: not-allowed;
+
+        .z-tree-node-anchor-checkbox-icon {
+          .z-tree-node-anchor-checkbox-icon-checked,
+          .z-tree-node-anchor-checkbox-icon-half-checked {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(@--wui-theme-color, 0.6);
+            color: rgba(@--wui-theme-color, 0.6);
+          }
+
+          .z-tree-node-anchor-checkbox-icon-unchecked {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            border: 1px solid rgba(@content-color, 0.4);
+            color: rgba(@--wui-theme-color, 1);
+          }
+        }
+      }
+
+      .z-tree-node-anchor-separator,
+      .z-tree-node-anchor-id,
+      .z-tree-node-anchor-label {
+        color: #c6c6c6;
+        white-space: pre;
+      }
+    }
+
+    .z-tree-node-anchor:hover {
+      background: rgba(@--wui-theme-color, 20%);
+    }
+
+    .z-tree-node-anchor-selected {
+      background-color: rgba(@--wui-theme-color, 0.453);
+    }
+  }
+
+  // 竖线
+  .z-tree-node-child .z-tree-node-line::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    top: calc(-7 / 14 * 1em);
+    bottom: 6px;
+    left: calc(-15 / 14 * 1em);
+    height: auto;
+    border-left: 1px dashed @border-color;
+  }
+
+  // 最后一个元素竖线固定高度为17px
+  .z-tree-node-child .z-tree-node-line:last-child::before {
+    height: calc(20 / 14 * 1em);
+  }
+
+  // 横线
+  .z-tree-node-child > .z-tree-node-line::after {
+    content: '';
+    position: absolute;
+    width: 1em;
+    top: calc(13 / 14 * 1em);
+    bottom: 0;
+    left: -1em;
+    height: 1px;
+    border-top: 1px dashed @border-color;
+  }
+
+  // 叶子节点，不显示图标时补充显示横线
+  .z-tree-node-child
+    > .z-tree-node-line
+    .z-tree-node-anchor-arrow-nochild-noicon::before {
+    content: '';
+    position: absolute;
+    width: 17px;
+    top: 12px;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    border-top: 1px dashed @border-color;
+  }
+
+  /*
+		展开和折叠的动画
+	*/
+  .slide-fade-enter-active {
+    transition: all 0.2s ease-out;
+  }
+
+  .slide-fade-leave-active {
+    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+
+  .slide-fade-enter-from,
+  .slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  /*
+    内容为空的提示
+  */
+  .z-tree-empty-tips {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: @content-color;
+  }
+}
