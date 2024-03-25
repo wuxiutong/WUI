@@ -4,32 +4,64 @@
   @content-color: #6e6e6e;
   @default-font-size: 14px;
   @default-theme-color: 237, 3, 9;
+  // 外部给定的字体大小
   @--font-size: var(--theme-font-size, @default-font-size);
+  // 外部给定的主体颜色值为 rgb格式，如：255,0,0
   @--theme-color: var(--theme-primary-color, @default-theme-color);
   @border-color: #c6c6c6;
   @--wui-theme-color: @--theme-color;
+  // 以下内容属于按照字体大小是14px的时候设置的各个组件的长宽高及边距等值，请勿携带单位。
+  @z-tree-node--margin: 2;
+  // tree节点高度
+  @z-tree-node-anchor--height: 2em;
+  // 折叠框宽度
+  @z-tree-node-anchor-arrow-expander--width: calc(
+    @z-tree-node-anchor--height / 2
+  );
+  // 复选框宽度
+  @z-tree-node-anchor-checkbox--width: calc(
+    @z-tree-node-anchor--height * 2 / 3
+  );
+  // 子节点向右缩进宽度
+  @z-tree-node-child--padding-left: calc(
+    (@z-tree-node-anchor--height) * 1 / 2 + (@z-tree-node-anchor--height) * 3 /
+      8 + (@z-tree-node-anchor--height) * 1 / 4 - (@z-tree-node-anchor--height) *
+      1 / 4 + 1px
+  );
+  // 复选框margin-left
+  @z-tree-node-anchor-checkbox--margin-left: calc(
+    @z-tree-node-anchor-checkbox--width / 2
+  );
+  // 内容区域padding-left
+  @z-tree-node-anchor-content--padding-left: 0.5em;
+  // 默认内容其余宽度
+  @z-tree-node-anchor-content-default--width: calc(
+    100% - @z-tree-node-anchor-arrow-expander--width -
+      @z-tree-node-anchor-checkbox--width - @z-tree-node-anchor-checkbox--width /
+      2 - (1em / 2)
+  );
 
   overflow: auto;
-  height: 100%;
+  height: auto;
   width: 100%;
 
   .z-tree-node {
-    width: auto;
+    width: 100%;
     height: auto;
     position: relative;
-    margin: calc((2 / 14) * 1em);
 
     // 子节点
     .z-tree-node-child {
-      width: auto;
+      // padding-left的向右缩进，折叠图标需要对齐勾选框
+      width: calc(100% - @z-tree-node-child--padding-left);
       height: auto;
       position: relative;
-      padding-left: calc(22 / 14 * 1em);
+      margin-left: @z-tree-node-child--padding-left;
     }
 
     .z-tree-node-anchor {
-      height: 2em;
-      display: inline-flex;
+      height: @z-tree-node-anchor--height;
+      display: flex;
       width: 100%;
       position: relative;
       cursor: pointer;
@@ -38,32 +70,35 @@
 
       // 折叠图标区域
       .z-tree-node-anchor-arrow {
-        height: cacl(1em * 18 / 14);
-        width: calc(1em * 18 / 14);
+        flex: 0 0 auto; /* 固定宽度，不允许缩放 */
+        height: auto;
+        width: auto;
         display: flex;
         align-items: center;
         flex-direction: row;
 
         .z-tree-node-anchor-arrow-expander {
-          height: calc(1em * 18 / 14);
-          width: calc(1em * 18 / 14);
+          height: @z-tree-node-anchor-arrow-expander--width;
+          // 需要添加边框的宽度
+          width: auto;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
 
           .z-tree-node-anchor-arrow-expander-plus,
-          .z-tree-node-anchor-arrow-expander-minus {
-            width: calc(1em * 16 / 14);
-            height: calc(1em * 16 / 14);
+          .z-tree-node-anchor-arrow-expander-minus,
+          .z-tree-node-anchor-arrow-expander-arrow-down,
+          .z-tree-node-anchor-arrow-expander-arrow-right {
+            width: calc(@z-tree-node-anchor-arrow-expander--width - 2px);
+            height: calc(@z-tree-node-anchor-arrow-expander--width - 2px);
             border: 1px solid @arrow-icon-color-plus-minus;
             color: @arrow-icon-color-plus-minus;
           }
 
           .z-tree-node-anchor-arrow-expander-arrow-down,
           .z-tree-node-anchor-arrow-expander-arrow-right {
-            width: calc(1em * 16 / 14);
-            height: calc(1em * 16 / 14);
+            border: none;
             color: @arrow-icon-color-arrow;
           }
         }
@@ -74,16 +109,14 @@
           align-items: center;
           flex-direction: row;
           margin: 0;
-          margin-right: calc((5 / 14) * 1em);
-
           svg {
-            width: calc(1em * 18 / 14);
-            height: calc(1em * 18 / 14);
+            width: calc((@z-tree-node-anchor--height) * 3 / 4);
+            height: calc((@z-tree-node-anchor--height) * 3 / 4);
           }
 
           .z-tree-node-anchor-arrow-nochild-noicon {
-            width: calc(1em * 18 / 14);
-            height: calc(1em * 18 / 14);
+            width: calc((@z-tree-node-anchor--height) * 3 / 4);
+            height: calc((@z-tree-node-anchor--height) * 3 / 4);
             padding: 0;
             margin: 0;
           }
@@ -94,25 +127,26 @@
 			* 勾选框区域
 			*/
       .z-tree-node-anchor-checkbox {
+        flex: 0 0 auto; /* 固定宽度，不允许缩放 */
         margin: 0;
-        width: calc(1em * 20 / 14);
-        height: calc(1em * 20 / 14);
+        width: @z-tree-node-anchor-checkbox--width;
+        height: @z-tree-node-anchor-checkbox--width;
         border: none;
         border-radius: 2px;
         cursor: pointer;
         margin-right: 0;
-        margin-left: calc((4 / 14) * 1em);
+        margin-left: @z-tree-node-anchor-checkbox--margin-left;
 
         .z-tree-node-anchor-checkbox-icon {
           margin: 0;
-          width: calc(1em * 20 / 14);
-          height: calc(1em * 20 / 14);
+          width: @z-tree-node-anchor-checkbox--width;
+          height: @z-tree-node-anchor-checkbox--width;
 
           .z-tree-node-anchor-checkbox-icon-checked,
           .z-tree-node-anchor-checkbox-icon-half-checked {
             margin: 0;
-            width: calc(1em * 20 / 14);
-            height: calc(1em * 20 / 14);
+            width: calc(@z-tree-node-anchor-checkbox--width - 2px);
+            height: calc(@z-tree-node-anchor-checkbox--width - 2px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -126,8 +160,8 @@
           .z-tree-node-anchor-checkbox-icon-unchecked {
             margin: 0;
             padding: 0;
-            width: calc(1em * 20 / 14);
-            height: calc(1em * 20 / 14);
+            width: calc(@z-tree-node-anchor-checkbox--width - 2px);
+            height: calc(@z-tree-node-anchor-checkbox--width - 2px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -145,25 +179,50 @@
 			* 显示内容区域
 			*/
       .z-tree-node-anchor-content {
-        cursor: text;
-        display: flex;
+        flex: 1 1 auto; /* 固定宽度，不允许缩放 */
         font-size: inherit;
         color: @content-color;
-        padding: 0;
-        padding-left: calc((6 / 14) * 1em);
-        align-items: center;
-        flex-direction: row;
+        cursor: pointer;
+        padding: 0 0 0 2px;
+        margin-left: @z-tree-node-anchor-content--padding-left;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 2px;
 
         .z-tree-node-anchor-content-default {
-          text-wrap: nowrap;
+          white-space: nowrap;
           text-overflow: ellipsis;
+          width: auto;
+          overflow: hidden;
+          align-items: center;
+          display: flex;
+          text-overflow: ellipsis;
+          overflow: hidden;
 
-          .z-tree-node-anchor-content-label {
-            white-space: nowrap;
+          .z-tree-node-anchor-content-id {
+            flex: 0 0 auto;
             width: auto;
+          }
+          .z-tree-node-anchor-content-separator {
+            flex: 0 0 auto;
+            width: auto;
+          }
+          .z-tree-node-anchor-content-label {
+            flex: 1 1 auto;
+            width: 1px;
             text-overflow: ellipsis;
+            overflow: hidden;
           }
         }
+      }
+      // 折叠图标及选择框均不显示时直接不添加边距
+      .z-tree-node-anchor-content-noicon-nocheckbox {
+        margin-left: 0;
+      }
+      .z-tree-node-anchor-content:hover {
+        background: rgba(@--wui-theme-color, 20%);
       }
     }
 
@@ -202,10 +261,6 @@
       }
     }
 
-    .z-tree-node-anchor:hover {
-      background: rgba(@--wui-theme-color, 20%);
-    }
-
     .z-tree-node-anchor-selected {
       background-color: rgba(@--wui-theme-color, 0.453);
     }
@@ -216,40 +271,40 @@
     content: '';
     position: absolute;
     width: 1px;
-    top: calc(-7 / 14 * 1em);
-    bottom: 6px;
-    left: calc(-15 / 14 * 1em);
+    top: 1px;
+    left: calc(
+      @z-tree-node-anchor-arrow-expander--width / 2 -
+        @z-tree-node-child--padding-left
+    );
     height: auto;
+    bottom: 0;
     border-left: 1px dashed @border-color;
   }
-
-  // 最后一个元素竖线固定高度为17px
-  .z-tree-node-child .z-tree-node-line:last-child::before {
-    height: calc(20 / 14 * 1em);
+  // 第一个
+  .z-tree-node-child .z-tree-node-line:first-child::before {
+    top: calc(-1 * ((@z-tree-node-anchor--height) / 4 - 2px));
   }
-
+  // 最后一个
+  .z-tree-node-child .z-tree-node-line:last-child::before {
+    height: calc(@z-tree-node-anchor--height / 2);
+  }
+  // 同时是第一个、也是最后一个
+  .z-tree-node-child .z-tree-node-line:last-child:first-child::before {
+    height: calc(
+      @z-tree-node-anchor--height / 2 +
+        ((@z-tree-node-anchor--height) / 4 - 2px)
+    );
+  }
   // 横线
   .z-tree-node-child > .z-tree-node-line::after {
     content: '';
     position: absolute;
-    width: 1em;
-    top: calc(13 / 14 * 1em);
-    bottom: 0;
-    left: -1em;
-    height: 1px;
-    border-top: 1px dashed @border-color;
-  }
-
-  // 叶子节点，不显示图标时补充显示横线
-  .z-tree-node-child
-    > .z-tree-node-line
-    .z-tree-node-anchor-arrow-nochild-noicon::before {
-    content: '';
-    position: absolute;
-    width: 17px;
-    top: 12px;
-    bottom: 0;
-    left: 0;
+    width: calc((@z-tree-node-anchor--height) * 5 / 8 - 3px);
+    top: calc(@z-tree-node-anchor--height / 2);
+    left: calc(
+      @z-tree-node-anchor-arrow-expander--width / 2 -
+        @z-tree-node-child--padding-left + 2px
+    );
     height: 1px;
     border-top: 1px dashed @border-color;
   }
@@ -257,19 +312,21 @@
   /*
 		展开和折叠的动画
 	*/
+
   .slide-fade-enter-active {
     transition: all 0.2s ease-out;
   }
 
   .slide-fade-leave-active {
-    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+    transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
   }
 
   .slide-fade-enter-from,
   .slide-fade-leave-to {
-    transform: translateX(20px);
+    // transform: translateX(20px); // 此处变化会导致动画时横向滚动条的出现
     opacity: 0;
   }
+
   /*
     内容为空的提示
   */

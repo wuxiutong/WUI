@@ -11,8 +11,8 @@
       :hideExpander="hideExpander" :nodeContentClickAction="nodeContentClickAction" :checkedNodes="treeNodeChecked"
       :expandKeys="expandKeys" @checkbox-click="checkboxClickEvent" @update:expand-node="treeExpanderClickEvent"
       @node-click="treeNodeClickEvent" @node-dblclick="treeNodeDblclickEvent">
-      <template #node-content="slotProps">
-        <slot name="node-content" :treeNode="slotProps.treeNode"></slot>
+      <template #default="slotProps">
+        <slot :treeNode="slotProps.treeNode"></slot>
       </template>
     </tree-node>
   </div>

@@ -8,7 +8,7 @@
           @click.stop="treeExpanderClick(treeNode)">
           <!-- 展开状态减号图标 -->
           <svg v-if="treeNode.expanded && showLine" class="z-tree-node-anchor-arrow-expander-minus"
-            xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="-2 -2 16 16">
+            xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 16 16">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5"
               d="M 1.2595435,6.004727 H 10.740457"
               style="stroke-width:0.509454;stroke-linecap:square;stroke-dasharray:none" />
@@ -20,7 +20,7 @@
           </svg>
           <!-- 折叠状态加号 -->
           <svg xmlns="http://www.w3.org/2000/svg" v-if="showLine && !treeNode.expanded"
-            class="z-tree-node-anchor-arrow-expander-plus" width="100%" height="100%" viewBox="-1 -1 14 14">
+            class="z-tree-node-anchor-arrow-expander-plus" viewBox="-1 -1 14 14">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
               d="M 5.994727,1.254727 V 10.73564" id="path1-8"
               style="stroke-width:0.509454;stroke-linecap:square;stroke-dasharray:none" />
@@ -35,13 +35,14 @@
           </svg>
         </span>
         <!-- 末级图标 -->
-        <span v-else class="z-tree-node-anchor-arrow-nochild" @click.stop="treeExpanderClick(treeNode)">
+        <span v-else-if="!hideLeafIcon" class="z-tree-node-anchor-arrow-nochild"
+          @click.stop="treeExpanderClick(treeNode)">
           <!-- 无子元素的file图标 -->
-          <svg width="14px" height="14px" viewBox="0 -30 256 300" v-if="!hideLeafIcon">
+          <svg width="14px" height="14px" viewBox="0 -30 256 300">
             <path fill="currentColor"
               d="m210.83 85.17l-56-56A4 4 0 0 0 152 28H56a12 12 0 0 0-12 12v176a12 12 0 0 0 12 12h144a12 12 0 0 0 12-12V88a4 4 0 0 0-1.17-2.83M156 41.65L198.34 84H156ZM200 220H56a4 4 0 0 1-4-4V40a4 4 0 0 1 4-4h92v52a4 4 0 0 0 4 4h52v124a4 4 0 0 1-4 4" />
           </svg>
-          <div v-else class="z-tree-node-anchor-arrow-nochild-noicon"></div>
+          <!-- <div v-else class="z-tree-node-anchor-arrow-nochild-noicon"></div> -->
         </span>
       </span>
       <!-- 勾选框 -->
@@ -51,7 +52,7 @@
           <!-- 勾选框图标 -->
           <span class="z-tree-node-anchor-checkbox-icon-checked" v-if="treeNode.checked === 1">
             <!-- 勾选 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 3 12 12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 3 12 12">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                 stroke-width="1.2919" d="M 1.64595,9.2236174 4.5486491,12.354075 10.354047,5.64595"
                 style="stroke-width:1.5;stroke-dasharray:none" />
@@ -59,7 +60,7 @@
           </span>
           <span class="z-tree-node-anchor-checkbox-icon-half-checked" v-else-if="treeNode.checked === 2">
             <!-- 半勾选 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 3 12 12">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 3 12 12">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                 stroke-width="1.2919" d="M 1.73638,8.993499 4.2115414,9.013614 10.263617,8.98638"
                 style="stroke-width:1.47276;stroke-linejoin:round;stroke-dasharray:none" sodipodi:nodetypes="ccc" />
@@ -67,15 +68,16 @@
           </span>
           <span class="z-tree-node-anchor-checkbox-icon-unchecked" v-else>
             <!-- 未勾选 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 0 0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 0 0">
               <path fill="currentColor" />
             </svg>
           </span>
         </span>
       </span>
       <!-- 组件 主要内容，默认分配为id-separator-label区域 -->
-      <div class="z-tree-node-anchor-content">
-        <slot name="node-content" :treeNode="treeNode">
+      <div class="z-tree-node-anchor-content"
+        :class="(hideLeafIcon && (!treeNode.children || treeNode.children.length <= 0) && (!showCheckbox && !multipleCheck)) ? 'z-tree-node-anchor-content-noicon-nocheckbox' : ''">
+        <slot :treeNode="treeNode">
           <div class="z-tree-node-anchor-content-default">
             <span class="z-tree-node-anchor-content-id" v-if="showId">{{ treeNode.id }}</span>
             <span class="z-tree-node-anchor-content-separator" v-if="showId" v-html="idSeparator"></span>
@@ -84,9 +86,10 @@
         </slot>
       </div>
     </div>
-    <div class="z-tree-node-child">
-      <Transition :name="transition" v-for="(node, index) in treeNode.children" :key="node.id ? node.id : index">
-        <tree-node :cascade="cascade" :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine"
+    <Transition :name="transition" mode="out-in">
+      <div class="z-tree-node-child" v-if="treeNode.expanded">
+        <tree-node v-for="(node, index) in treeNode.children" mode="out-in" :key="node.id ? node.id : index"
+          :cascade="cascade" :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine"
           :expandAll="expandAll" :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
           :enableDblclick="enableDblclick" :enableWholeAnchorStatus="enableWholeAnchorStatus"
           :enableCheckConfirm="enableCheckConfirm" :showId="showId" :idSeparator="idSeparator"
@@ -94,12 +97,12 @@
           :treeNode="node" :checked-nodes="checkedNodes" :expandKeys="expandKeys"
           @checkbox-click="checkboxClickBubbleEvent" @update:expand-node="treeExpanderClickBubbleEvent"
           @node-click="treeNodeClickBubbleEvent" @node-dblclick="treeNodeDblClickBubbleEvent" v-if="treeNode.expanded">
-          <template #node-content="slotProps: any">
-            <slot name="node-content" :treeNode="slotProps.treeNode"></slot>
+          <template #default="slotProps: any">
+            <slot :treeNode="slotProps.treeNode"></slot>
           </template>
         </tree-node>
-      </Transition>
-    </div>
+      </div>
+    </Transition>
   </div>
 </template>
 <script lang="ts">
@@ -112,6 +115,7 @@ import './style/tree-node.less'
 import { TreeNode } from './tree-node'
 import { ref, defineProps, watch, Transition } from 'vue'
 import { TreeNodeData, TreeItemProps, TreeNodeEmits, TreeNodeContentClickActionEnum, TreeConfig } from './type'
+import { tree } from 'gulp';
 /**
 参数
 */

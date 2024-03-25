@@ -43,4 +43,4 @@ WUI is open source software licensed as
 ## Changes
 
 The following is the change log
-[CHANGES](https://github.com/wuxiutong/WUI/blob/main/CHANGES).
+[CHANGES](https://github.com/wuxiutong/WUI/blob/main/CHANGES.md).

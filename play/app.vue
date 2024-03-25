@@ -4,6 +4,9 @@
 		<figcaption>参数设置</figcaption>
 		<fieldset>
 			<div class="buttons">
+				<button @click="hideLeafIcon = !hideLeafIcon" class="theme-button blue">{{
+					hideLeafIcon ? '显示末级图标' : '隐藏末级图标'
+				}}</button>
 				<button @click="showCheckbox = !showCheckbox" :disabled="multipleCheck" class="theme-button blue">{{
 					showCheckbox ? '显示复选框' : '隐藏复选框'
 				}}</button>
@@ -46,31 +49,56 @@
 		</fieldset>
 	</legend>
 	<WuiTree :data="treeData" class="tree" :show-id="showId" :show-line="showLine" :checkedAll="checkedAll"
-		:cascade="cascade" :expand-all="expandAll" :showCheckbox="showCheckbox" :multipleCheck="multipleCheck"
-		:nodeContentClickAction="nodeContentClickAction" :enableCheckConfirm="enableCheckConfirm"
-		:onlyLeafCheck="onlyLeafCheck" :enableDbclick="true" @update:checkedKeys="checkedChanged"
-		@tree-node-checkbox-click="treeNodeCheckboxClick" idSeparator="&nbsp;&nbsp;&nbsp;">
+		:hideLeafIcon="hideLeafIcon" :cascade="cascade" :expand-all="expandAll" :showCheckbox="showCheckbox"
+		:multipleCheck="multipleCheck" :nodeContentClickAction="nodeContentClickAction"
+		:enableCheckConfirm="enableCheckConfirm" :onlyLeafCheck="onlyLeafCheck" :enableDbclick="true"
+		@update:checkedKeys="checkedChanged" @tree-node-checkbox-click="treeNodeCheckboxClick"
+		idSeparator="&nbsp;&nbsp;&nbsp;">
+		<!-- <template v-slot="slotProps">
+			<div class="tree-node-content-div">
+				<div>
+					<span v-if="showId">{{ slotProps.treeNode.id }}</span>
+					<span>{{ slotProps.treeNode.label }}</span>
+				</div>
+				  <a href="#" v-if="!slotProps.treeNode.children || slotProps.treeNode.children.length <= 0">选择</a> 
+		</div>
+</template> -->
 	</WuiTree>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { WuiTree } from '@WUI/components'
-import { TreeNodeContentClickActionEnum, } from '@WUI/components'
-import type { TreeOriginalData } from '@WUI/components'
+import { WuiTree } from '@wuxiutong/wui'
+import { TreeNodeContentClickActionEnum, } from '@wuxiutong/wui'
+import type { TreeOriginalData } from '@wuxiutong/wui'
+// import { WuiTree } from '@WUI/components'
+// import { TreeNodeContentClickActionEnum, } from '@WUI/components'
+// import type { TreeOriginalData } from '@WUI/components'
 import { TreeCheckedKeys, TreeNodeData } from 'packages/components';
-const treeData = ref<TreeOriginalData[]>([
+const treeData =
+	ref<TreeOriginalData[]>([{ label: '第一级1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级', id: '1' }, { label: '第一级2', id: '2' }, { label: '第一级3', id: '3' }, { label: '第一级4', id: '4' }, { label: '第一级5', id: '5' }])
+/*
+ref<TreeOriginalData[]>([
 	{
-		label: '所有', id: '0', children: [
+		label: '所有 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级', id: '0', children: [
 			{
 				label: '第一级1', id: '1', children: [
 					{ label: '第一级1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-1' },
-					{ label: '第一级1-2', id: '1-2' },
-					{ label: '第一级1-3', id: '1-3' }
+					{ label: '第一级1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-2' },
+					{
+						label: '第一级1-3', id: '1-3', children: [
+							{
+								label: '第一级1-3-1', id: '1-3-1', children: [
+									{ label: '第一级1-3-1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
+									{ label: '第一级1-3-1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
+									{ label: '第一级1-3-1-3', id: '1-3-1-3' }
+								]
+							}]
+					}
 				]
 			},
 			{
-				label: '第一级2', id: '2', disabled: true, children: [
+				label: '第一级2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '2', disabled: true, children: [
 					{ label: '第一级2-1', id: '2-1' },
 					{ label: '第一级2-2', id: '2-2' },
 					{ label: '第一级2-3', id: '2-3' }
@@ -93,6 +121,7 @@ const treeData = ref<TreeOriginalData[]>([
 		]
 	}
 ])
+*/
 const enableCheckConfirm = ref<boolean>(false)
 const nodeContentClickAction = ref<TreeNodeContentClickActionEnum>(TreeNodeContentClickActionEnum.EXPAND)
 const onlyLeafCheck = ref(true)
@@ -100,7 +129,8 @@ const multipleCheck = ref(true)
 const showCheckbox = ref(true)
 const showLine = ref(true)
 const cascade = ref(true)
-const showId = ref(false)
+const showId = ref(true)
+const hideLeafIcon = ref(true)
 let expandAll = ref<boolean>(false);
 let fontSize = ref<number>(14);
 let checkedAll = ref<boolean>(false);
@@ -114,16 +144,25 @@ function switchTheme(flag: string) {
 function loadData() {
 	treeData.value = [
 		{
-			label: '所有', id: '0', children: [
+			label: '所有 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级', id: '0', children: [
 				{
 					label: '第一级1', id: '1', children: [
-						{ label: '第一级1-1', id: '1-1' },
-						{ label: '第一级1-2', id: '1-2' },
-						{ label: '第一级1-3', id: '1-3' }
+						{ label: '第一级1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-1' },
+						{ label: '第一级1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-2' },
+						{
+							label: '第一级1-3', id: '1-3', children: [
+								{
+									label: '第一级1-3-1', id: '1-3-1', children: [
+										{ label: '第一级1-3-1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
+										{ label: '第一级1-3-1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
+										{ label: '第一级1-3-1-3', id: '1-3-1-3' }
+									]
+								}]
+						}
 					]
 				},
 				{
-					label: '第一级2', id: '2', children: [
+					label: '第一级2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '2', disabled: true, children: [
 						{ label: '第一级2-1', id: '2-1' },
 						{ label: '第一级2-2', id: '2-2' },
 						{ label: '第一级2-3', id: '2-3' }
@@ -232,5 +271,22 @@ function defaultFontSize() {
 .tree {
 	height: 300px;
 	border: 1px solid gray;
+}
+
+.tree-node-content-div {
+	display: flex;
+
+	span {}
+
+	div {
+		// max-width: calc(100% - 3em);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	a {
+		margin-left: 1em;
+	}
 }
 </style>

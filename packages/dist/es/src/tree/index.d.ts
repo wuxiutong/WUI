@@ -432,7 +432,7 @@ export declare const WuiTree: {
     emptyTips: string;
 }, {}, string, {}> & import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps & (new () => {
     $slots: {
-        "node-content"?(_: {
+        default?(_: {
             treeNode: any;
         }): any;
     };

@@ -71,7 +71,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     checkedKeys: TreeCheckedKeys[];
     emptyTips: string;
 }, {}>, {
-    "node-content"?(_: {
+    default?(_: {
         treeNode: any;
     }): any;
 }>;

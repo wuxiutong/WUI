@@ -27,7 +27,7 @@ export const buildStyle:any = ()=>{
 // 复制package.json、readMe等文件 
 export const copyLibFiles = ()=>{
 	const files = [
-			{src:'/packages/components/package.json',dest:"package.json"}
+			{src:'/packages/components/package-build.json',dest:"package.json"}
 		, {src:'README.md',dest:'README.md'}
 		, {src:'LICENSE',dest:'LICENSE'}
 		, {src:'CHANGELOG.md',dest:'CHANGELOG.md'}
