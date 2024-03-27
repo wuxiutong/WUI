@@ -1,11 +1,12 @@
 <template>
-  <div class="z-tree">
+  <div class="z-tree" :class="treeId">
     <div v-if="!treeNodeData || treeNodeData.length <= 0" class="z-tree-empty-tips">
       <span>{{ emptyTips }}</span>
     </div>
-    <tree-node v-else v-for="(node, index) in treeNodeData" :key="node.id ? node.id : index" :treeNode="node"
-      :cascade="cascade" :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine"
-      :expandAll="expandAll" :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
+    <tree-node v-else v-for="(node, index) in treeNodeData" :sender-element-id="senderElementId" :tree-id="treeId"
+      :max-tab-index="treeNodeList.length + 1" :key="node.id ? node.id : index" :treeNode="node" :cascade="cascade"
+      :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine" :expandAll="expandAll"
+      :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
       :enableDblclick="enableDblclick" :enableWholeAnchorStatus="enableWholeAnchorStatus"
       :enableCheckConfirm="enableCheckConfirm" :showId="showId" :idSeparator="idSeparator" :hideLeafIcon="hideLeafIcon"
       :hideExpander="hideExpander" :nodeContentClickAction="nodeContentClickAction" :checkedNodes="treeNodeChecked"
@@ -20,6 +21,7 @@
 <script lang="ts" setup>
 defineOptions({ name: "wui-tree" })
 import { ref, defineProps, watch, reactive } from 'vue'
+import { randomString } from '../utils'
 import { TreeNode } from './tree-node'
 import {
   TreeNodeData,
@@ -41,6 +43,8 @@ const props = withDefaults(defineProps<TreeProps>(), {
   expandKeys: () => {
     return []
   },
+  senderElementId: '',
+  treeId: () => randomString(32),
   cascade: true,
   showCheckbox: false,
   transition: 'slide-fade',
@@ -146,12 +150,13 @@ watch(
  * @param array 原始数据内容
  * @param parentNode
  */
-function initChildren(array: TreeOriginalData[], parentNode: TreeNodeData | null) {
+function initChildren(array: TreeOriginalData[], parentNode: TreeNodeData | null, tabIndex: { index: number }) {
   if (parentNode) {
     array.forEach((item) => {
       let node: TreeNodeData = {
         label: item.label,
         id: item.id,
+        tabIndex: tabIndex.index++,
         children: [],
         checked: 0,
         disabled: item.disabled,
@@ -172,7 +177,7 @@ function initChildren(array: TreeOriginalData[], parentNode: TreeNodeData | null
       parentNode.children.push(node)
       treeNodeList.value.push(node)
       if (item.children && item.children.length) {
-        initChildren(item.children, node)
+        initChildren(item.children, node, tabIndex)
       }
     })
   }
@@ -186,9 +191,11 @@ function initNode() {
   treeNodeChecked.value.splice(0, treeNodeChecked.value.length)
   treeNodeExpand.value.splice(0, treeNodeExpand.value.length)
   treeNodeList.value = []
+  let tabIndex = { index: 1 }
   props.data.forEach((item) => {
     let node: TreeNodeData = {
       label: item.label,
+      tabIndex: tabIndex.index++,
       id: item.id,
       children: [],
       checked: 0,
@@ -205,7 +212,7 @@ function initNode() {
       treeNodeExpand.value.push(node)
     }
     if (item.children && item.children.length) {
-      initChildren(item.children, node)
+      initChildren(item.children, node, tabIndex)
     }
     treeNodeData.push(node)
     treeNodeList.value.push(node)
@@ -231,6 +238,12 @@ function initNode() {
       }
     }
   })
+  // 节点展开项不存在，则遵循expandAll表示 wxt 20240326
+  if (!treeNodeExpand.value || treeNodeExpand.value.length <= 0) {
+    treeNodeList.value.forEach((item) => {
+      item.expanded = props.expandAll
+    })
+  }
 }
 /**
  * 递归遍历父节点，改变展开状态
@@ -628,6 +641,7 @@ function changeParentNodeStatus(item: TreeNodeData, value: TreeNodeCheckedType) 
   }
 }
 initNode()
+
 </script>
 <style lang="less">
 .z-tree {

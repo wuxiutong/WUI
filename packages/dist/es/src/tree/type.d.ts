@@ -47,12 +47,14 @@ interface config {
     hideLeafIcon?: boolean;
     hideExpander?: boolean;
     nodeContentClickAction?: TreeNodeContentClickActionEnum;
+    senderElementId?: string;
+    treeId: string;
 }
 /**
  * @param {string} emptyTips - 内容为空的提示信息
  */
 export interface TreeConfig extends config {
-    emptyTips: string;
+    emptyTips?: string;
 }
 /**
  * @description: 树组件选中项数据结构0 | 1 | 2，分别代表未选中、选中、半选中
@@ -66,6 +68,8 @@ export interface TreeOriginalData {
     id: StringOrNumber;
     children?: TreeOriginalData[];
     disabled?: boolean;
+    parentId?: StringOrNumber;
+    parent?: TreeOriginalData | null;
 }
 /**
  * @description: 树组件内部项所需参数
@@ -74,6 +78,7 @@ export interface TreeItemProps extends config {
     treeNode: TreeNodeData;
     checkedNodes?: TreeNodeData[];
     expandKeys?: TreeExpandKeys[];
+    maxTabIndex: number;
 }
 /**
  * @description: 树组件所需参数
@@ -88,6 +93,7 @@ export interface TreeProps extends TreeConfig {
  */
 export type TreeNodeData = {
     label: string;
+    tabIndex?: number;
     id: StringOrNumber;
     children?: TreeNodeData[];
     checked: TreeNodeCheckedType;

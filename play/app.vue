@@ -4,6 +4,8 @@
 		<figcaption>参数设置</figcaption>
 		<fieldset>
 			<div class="buttons">
+				<span>搜索:</span>
+				<input id='__searchInput' v-model="keywords" @keydown.down="searchKeyDown" @keydown.enter="searchKeywords" />
 				<button @click="hideLeafIcon = !hideLeafIcon" class="theme-button blue">{{
 					hideLeafIcon ? '显示末级图标' : '隐藏末级图标'
 				}}</button>
@@ -48,12 +50,12 @@
 			</div>
 		</fieldset>
 	</legend>
-	<WuiTree :data="treeData" class="tree" :show-id="showId" :show-line="showLine" :checkedAll="checkedAll"
-		:hideLeafIcon="hideLeafIcon" :cascade="cascade" :expand-all="expandAll" :showCheckbox="showCheckbox"
-		:multipleCheck="multipleCheck" :nodeContentClickAction="nodeContentClickAction"
-		:enableCheckConfirm="enableCheckConfirm" :onlyLeafCheck="onlyLeafCheck" :enableDbclick="true"
-		@update:checkedKeys="checkedChanged" @tree-node-checkbox-click="treeNodeCheckboxClick"
-		idSeparator="&nbsp;&nbsp;&nbsp;">
+	<WuiTree :data="treeData" class="tree" sender-element-id="__searchInput" :tree-id="randomStr" :show-id="showId"
+		:show-line="showLine" :checkedAll="checkedAll" :hideLeafIcon="hideLeafIcon" :cascade="cascade"
+		:expand-all="expandAll" :showCheckbox="showCheckbox" :multipleCheck="multipleCheck"
+		:nodeContentClickAction="nodeContentClickAction" :enableCheckConfirm="enableCheckConfirm"
+		:onlyLeafCheck="onlyLeafCheck" :enableDbclick="true" @update:checkedKeys="checkedChanged"
+		@tree-node-checkbox-click="treeNodeCheckboxClick" idSeparator="&nbsp;&nbsp;&nbsp;">
 		<!-- <template v-slot="slotProps">
 			<div class="tree-node-content-div">
 				<div>
@@ -68,60 +70,17 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { WuiTree } from '@wuxiutong/wui'
+import { WuiTree, randomString, TreeUtils } from '@wuxiutong/wui'
 import { TreeNodeContentClickActionEnum, } from '@wuxiutong/wui'
 import type { TreeOriginalData } from '@wuxiutong/wui'
 // import { WuiTree } from '@WUI/components'
 // import { TreeNodeContentClickActionEnum, } from '@WUI/components'
 // import type { TreeOriginalData } from '@WUI/components'
 import { TreeCheckedKeys, TreeNodeData } from 'packages/components';
-const treeData =
-	ref<TreeOriginalData[]>([{ label: '第一级1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级', id: '1' }, { label: '第一级2', id: '2' }, { label: '第一级3', id: '3' }, { label: '第一级4', id: '4' }, { label: '第一级5', id: '5' }])
-/*
-ref<TreeOriginalData[]>([
-	{
-		label: '所有 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级', id: '0', children: [
-			{
-				label: '第一级1', id: '1', children: [
-					{ label: '第一级1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-1' },
-					{ label: '第一级1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-2' },
-					{
-						label: '第一级1-3', id: '1-3', children: [
-							{
-								label: '第一级1-3-1', id: '1-3-1', children: [
-									{ label: '第一级1-3-1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
-									{ label: '第一级1-3-1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
-									{ label: '第一级1-3-1-3', id: '1-3-1-3' }
-								]
-							}]
-					}
-				]
-			},
-			{
-				label: '第一级2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '2', disabled: true, children: [
-					{ label: '第一级2-1', id: '2-1' },
-					{ label: '第一级2-2', id: '2-2' },
-					{ label: '第一级2-3', id: '2-3' }
-				]
-			},
-			{
-				label: '第一级3', id: '3', children: [
-					{ label: '第一级3-1', id: '3-1' },
-					{ label: '第一级3-2', id: '3-2' },
-					{ label: '第一级3-3', id: '3-3' }
-				]
-			},
-			{
-				label: '第一级4', id: '4', children: [
-					{ label: '第一级4-1', id: '5-1' },
-					{ label: '第一级5-2', id: '5-2' },
-					{ label: '第一级5-3', id: '5-3' }
-				]
-			}
-		]
-	}
-])
-*/
+let treeDataSrc: TreeOriginalData[] = [{ label: '第一级1', id: '1', parentId: '' }, { label: '第二级1', id: '2', parentId: '1' }, { label: '第三级1', id: '3', parentId: '2' }, { label: '第三级2', id: '4', parentId: '2' }, { label: '第三级5', id: '5', parentId: '2' }, { label: '第一级2', id: '7', parentId: '' }, { label: '第一级3', id: '8', parentId: '' }, { label: '第二级1', id: '9', parentId: '8' },]
+
+let treeData = ref<TreeOriginalData[]>()
+
 const enableCheckConfirm = ref<boolean>(false)
 const nodeContentClickAction = ref<TreeNodeContentClickActionEnum>(TreeNodeContentClickActionEnum.EXPAND)
 const onlyLeafCheck = ref(true)
@@ -134,6 +93,8 @@ const hideLeafIcon = ref(true)
 let expandAll = ref<boolean>(false);
 let fontSize = ref<number>(14);
 let checkedAll = ref<boolean>(false);
+let randomStr = randomString(32)
+let keywords = ref<string>('')
 function switchTheme(flag: string) {
 	document.documentElement.style.setProperty(
 		"--theme-primary-color",
@@ -142,49 +103,46 @@ function switchTheme(flag: string) {
 }
 
 function loadData() {
-	treeData.value = [
+	treeDataSrc = [
 		{
-			label: '所有 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级', id: '0', children: [
+			label: '第一级1(这个节点应该隐藏)', id: '1', children: [
+				{ label: '第一级1-1 ', id: '1-1' },
+				{ label: '第一级1-2', id: '1-2', },
 				{
-					label: '第一级1', id: '1', children: [
-						{ label: '第一级1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-1' },
-						{ label: '第一级1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-2' },
+					label: '第一级第二层', id: '1-3', children: [
 						{
-							label: '第一级1-3', id: '1-3', children: [
-								{
-									label: '第一级1-3-1', id: '1-3-1', children: [
-										{ label: '第一级1-3-1-1 这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
-										{ label: '第一级1-3-1-2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '1-3-1-2' },
-										{ label: '第一级1-3-1-3', id: '1-3-1-3' }
-									]
-								}]
-						}
-					]
-				},
-				{
-					label: '第一级2这是超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长超级长', id: '2', disabled: true, children: [
-						{ label: '第一级2-1', id: '2-1' },
-						{ label: '第一级2-2', id: '2-2' },
-						{ label: '第一级2-3', id: '2-3' }
-					]
-				},
-				{
-					label: '第一级3', id: '3', children: [
-						{ label: '第一级3-1', id: '3-1' },
-						{ label: '第一级3-2', id: '3-2' },
-						{ label: '第一级3-3', id: '3-3' }
-					]
-				},
-				{
-					label: '第一级4', id: '4', children: [
-						{ label: '第一级4-1', id: '5-1' },
-						{ label: '第一级5-2', id: '5-2' },
-						{ label: '第一级5-3', id: '5-3' }
-					]
+							label: '第一级第三层', id: '1-3-1', children: [
+								{ label: '第一级1-3-1-1 ', id: '1-3-1-1' },
+								{ label: '第一级1-3-1-2', id: '1-3-1-2' },
+								{ label: '第一级1-3-1-3', id: '1-3-1-3' }
+							]
+						}]
 				}
+			]
+		},
+		{
+			label: '第一级2', id: '2', disabled: true, children: [
+				{ label: '第一级2-1', id: '2-1' },
+				{ label: '第一级2-2', id: '2-2' },
+				{ label: '第一级2-3', id: '2-3' }
+			]
+		},
+		{
+			label: '第一级3', id: '3', children: [
+				{ label: '第一级3-1', id: '3-1' },
+				{ label: '第一级3-2', id: '3-2' },
+				{ label: '第一级3-3', id: '3-3' }
+			]
+		},
+		{
+			label: '第一级4', id: '4', children: [
+				{ label: '第一级4-1', id: '5-1' },
+				{ label: '第一级5-2', id: '5-2' },
+				{ label: '第一级5-3', id: '5-3' }
 			]
 		}
 	]
+	treeData.value = [...treeDataSrc]
 }
 function clearData() {
 	treeData.value.splice(0, treeData.value.length)
@@ -192,7 +150,7 @@ function clearData() {
 function checkedChanged(checkedKeys: TreeCheckedKeys) {
 }
 function treeNodeCheckboxClick(node: TreeNodeData, fn: Function, e: MouseEvent) {
-	console.log('checkbox点击了：' + node.checked)
+	// console.log('checkbox点击了：' + node.checked)
 	if (enableCheckConfirm.value) {
 		if (confirm('是否勾选？')) {
 			fn().then(() => {
@@ -201,7 +159,7 @@ function treeNodeCheckboxClick(node: TreeNodeData, fn: Function, e: MouseEvent) 
 		} else {
 		}
 	} else {
-		console.log('无需确认')
+		// console.log('无需确认')
 	}
 
 }
@@ -221,7 +179,6 @@ function decreaseFontSize() {
 		"font-size",
 		fontSize.value + 'px'
 	);
-	console.log('当前字体大小：' + fontSize.value + 'px')
 }
 function defaultFontSize() {
 	fontSize.value = 14;
@@ -229,9 +186,32 @@ function defaultFontSize() {
 		"font-size",
 		fontSize.value + 'px'
 	);
-	console.log('当前字体大小：' + fontSize.value + 'px')
 }
+
+// 搜索框汇总向下方向键按下事件
+function searchKeyDown(e: KeyboardEvent) {
+	let dom = document.querySelector("#" + randomStr + "__" + 1)
+	if (dom) {
+		dom.focus()
+	}
+}
+
+// 搜索框回车事件
+function searchKeywords() {
+	const ddata = TreeUtils.searchIdAndLabel(treeDataSrc, keywords.value, true, false)
+	treeData.value = ddata
+}
+
+// 初始化数据
+function init() {
+	treeData.value = TreeUtils.buildParentAndChildren(treeDataSrc, true)
+}
+
+init();
+
 </script>
+
+
 <style lang="less">
 :root {
 	// --theme-primary-color: 0, 0, 255;

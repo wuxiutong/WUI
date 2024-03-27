@@ -47,3 +47,27 @@ fix display error!
 #### Features
 
 none
+
+### 0.1.5
+
+_2024-03-25_
+
+#### Bug fixes
+
+fix disabled tree node cursor:not allowed
+
+#### Features
+
+none
+
+### 0.2.0
+
+_2024-03-27_
+
+#### Bug fixes
+
+none
+
+#### Features
+
+1, new response keyboard up and down left and right key events; 2. Add the "treeId" attribute to specify the dom id of the tree; 3. Add the "senderElementId" attribute to specify the caller ID; 4. Add radio mode and press enter to focus the cursor on the call according to "senderElementId";5. Add the component named "Utils";

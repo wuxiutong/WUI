@@ -182,7 +182,6 @@
         flex: 1 1 auto; /* 固定宽度，不允许缩放 */
         font-size: inherit;
         color: @content-color;
-        cursor: pointer;
         padding: 0 0 0 2px;
         margin-left: @z-tree-node-anchor-content--padding-left;
         height: 100%;
@@ -195,7 +194,6 @@
           white-space: nowrap;
           text-overflow: ellipsis;
           width: auto;
-          overflow: hidden;
           align-items: center;
           display: flex;
           text-overflow: ellipsis;
@@ -226,8 +224,17 @@
       }
     }
 
+    .z-tree-node-anchor:focus {
+      outline: none;
+    }
+    .z-tree-node-anchor:focus .z-tree-node-anchor-content {
+      outline: 1px solid rgba(@--wui-theme-color, 40%);
+      background: rgba(@--wui-theme-color, 20%);
+    }
+
     // 不可用状态,边框颜色变灰，字体颜色变灰色，勾选颜色深黑色
     .z-tree-node-anchor-disabled {
+      cursor: not-allowed;
       .z-tree-node-anchor-checkbox {
         cursor: not-allowed;
 
@@ -314,11 +321,11 @@
 	*/
 
   .slide-fade-enter-active {
-    transition: all 0.2s ease-out;
+    transition: all 0.1s ease-out;
   }
 
   .slide-fade-leave-active {
-    transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
   }
 
   .slide-fade-enter-from,

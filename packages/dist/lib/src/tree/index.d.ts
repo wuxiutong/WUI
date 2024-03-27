@@ -70,6 +70,15 @@ export declare const WuiTree: {
             type: import("vue").PropType<import("./type").TreeNodeContentClickActionEnum>;
             default: import("./type").TreeNodeContentClickActionEnum;
         };
+        senderElementId: {
+            type: import("vue").PropType<string>;
+            default: string;
+        };
+        treeId: {
+            type: import("vue").PropType<string>;
+            required: true;
+            default: () => string;
+        };
         data: {
             type: import("vue").PropType<import("./type").TreeOriginalData[]>;
             default: () => never[];
@@ -80,7 +89,6 @@ export declare const WuiTree: {
         };
         emptyTips: {
             type: import("vue").PropType<string>;
-            required: true;
             default: string;
         };
     }>> & {
@@ -161,6 +169,15 @@ export declare const WuiTree: {
             type: import("vue").PropType<import("./type").TreeNodeContentClickActionEnum>;
             default: import("./type").TreeNodeContentClickActionEnum;
         };
+        senderElementId: {
+            type: import("vue").PropType<string>;
+            default: string;
+        };
+        treeId: {
+            type: import("vue").PropType<string>;
+            required: true;
+            default: () => string;
+        };
         data: {
             type: import("vue").PropType<import("./type").TreeOriginalData[]>;
             default: () => never[];
@@ -171,7 +188,6 @@ export declare const WuiTree: {
         };
         emptyTips: {
             type: import("vue").PropType<string>;
-            required: true;
             default: string;
         };
     }>> & {
@@ -196,6 +212,8 @@ export declare const WuiTree: {
         hideLeafIcon: boolean;
         hideExpander: boolean;
         nodeContentClickAction: import("./type").TreeNodeContentClickActionEnum;
+        senderElementId: string;
+        treeId: string;
         data: import("./type").TreeOriginalData[];
         checkedKeys: import("./type").TreeCheckedKeys[];
         emptyTips: string;
@@ -276,6 +294,15 @@ export declare const WuiTree: {
             type: import("vue").PropType<import("./type").TreeNodeContentClickActionEnum>;
             default: import("./type").TreeNodeContentClickActionEnum;
         };
+        senderElementId: {
+            type: import("vue").PropType<string>;
+            default: string;
+        };
+        treeId: {
+            type: import("vue").PropType<string>;
+            required: true;
+            default: () => string;
+        };
         data: {
             type: import("vue").PropType<import("./type").TreeOriginalData[]>;
             default: () => never[];
@@ -286,7 +313,6 @@ export declare const WuiTree: {
         };
         emptyTips: {
             type: import("vue").PropType<string>;
-            required: true;
             default: string;
         };
     }>> & {
@@ -311,6 +337,8 @@ export declare const WuiTree: {
         hideLeafIcon: boolean;
         hideExpander: boolean;
         nodeContentClickAction: import("./type").TreeNodeContentClickActionEnum;
+        senderElementId: string;
+        treeId: string;
         data: import("./type").TreeOriginalData[];
         checkedKeys: import("./type").TreeCheckedKeys[];
         emptyTips: string;
@@ -388,6 +416,15 @@ export declare const WuiTree: {
         type: import("vue").PropType<import("./type").TreeNodeContentClickActionEnum>;
         default: import("./type").TreeNodeContentClickActionEnum;
     };
+    senderElementId: {
+        type: import("vue").PropType<string>;
+        default: string;
+    };
+    treeId: {
+        type: import("vue").PropType<string>;
+        required: true;
+        default: () => string;
+    };
     data: {
         type: import("vue").PropType<import("./type").TreeOriginalData[]>;
         default: () => never[];
@@ -398,7 +435,6 @@ export declare const WuiTree: {
     };
     emptyTips: {
         type: import("vue").PropType<string>;
-        required: true;
         default: string;
     };
 }>> & {
@@ -427,6 +463,8 @@ export declare const WuiTree: {
     hideLeafIcon: boolean;
     hideExpander: boolean;
     nodeContentClickAction: import("./type").TreeNodeContentClickActionEnum;
+    senderElementId: string;
+    treeId: string;
     data: import("./type").TreeOriginalData[];
     checkedKeys: import("./type").TreeCheckedKeys[];
     emptyTips: string;

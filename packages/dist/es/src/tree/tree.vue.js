@@ -1,10 +1,11 @@
-import { defineComponent as T, reactive as V, ref as g, watch as s, openBlock as C, createElementBlock as x, unref as v, createElementVNode as W, toDisplayString as z, Fragment as F, renderList as H, createBlock as U, withCtx as X, renderSlot as j } from "vue";
+import { defineComponent as P, reactive as T, ref as x, watch as s, openBlock as C, createElementBlock as g, normalizeClass as V, unref as v, createElementVNode as W, toDisplayString as z, Fragment as F, renderList as H, createBlock as U, withCtx as X, renderSlot as j } from "vue";
 import q from "./tree-node.vue.js";
 import { TreeNodeContentClickActionEnum as y } from "./type.js";
-const G = { class: "z-tree" }, J = {
+import { randomString as G } from "../utils/random.js";
+const J = {
   key: 0,
   class: "z-tree-empty-tips"
-}, Y = /* @__PURE__ */ T({
+}, Z = /* @__PURE__ */ P({
   name: "wui-tree",
   __name: "tree",
   props: {
@@ -27,17 +28,19 @@ const G = { class: "z-tree" }, J = {
     idSeparator: { default: "" },
     hideLeafIcon: { type: Boolean, default: !1 },
     hideExpander: { type: Boolean, default: !1 },
-    nodeContentClickAction: { default: y.NONE }
+    nodeContentClickAction: { default: y.NONE },
+    senderElementId: { default: "" },
+    treeId: { default: () => G(32) }
   },
   emits: ["update:checkedKeys", "tree-node-click", "tree-node-checkbox-click"],
   setup(w, { emit: B }) {
     const f = B, n = w;
-    let u = V([]);
-    const d = g([]), c = g([]), r = g([]);
+    let u = T([]);
+    const h = x([]), c = x([]), d = x([]);
     s(
       () => n.data,
       () => {
-        L();
+        A();
       },
       {
         deep: !0
@@ -45,7 +48,7 @@ const G = { class: "z-tree" }, J = {
     ), s(
       () => n.checkedKeys,
       () => {
-        A();
+        L();
       },
       {
         deep: !0
@@ -53,12 +56,12 @@ const G = { class: "z-tree" }, J = {
     ), s(
       () => n.showCheckbox,
       () => {
-        A();
+        L();
       }
     ), s(
       () => n.expandAll,
       () => {
-        d.value.forEach((e) => {
+        h.value.forEach((e) => {
           e.expanded = n.expandAll;
         });
       }
@@ -69,7 +72,7 @@ const G = { class: "z-tree" }, J = {
           c.value.forEach((a) => {
             a.checked = 0;
           }), c.value.splice(0, c.value.length);
-          const l = d.value.filter((a) => !a.disabled);
+          const l = h.value.filter((a) => !a.disabled);
           l && l.length > 0 && l.forEach((a) => {
             c.value.push(a), a.checked = 1;
           });
@@ -91,51 +94,57 @@ const G = { class: "z-tree" }, J = {
         deep: !0
       }
     );
-    function E(e, l) {
-      l && e.forEach((a) => {
-        let i = {
-          label: a.label,
-          id: a.id,
+    function E(e, l, a) {
+      l && e.forEach((i) => {
+        let t = {
+          label: i.label,
+          id: i.id,
+          tabIndex: a.index++,
           children: [],
           checked: 0,
-          disabled: a.disabled,
+          disabled: i.disabled,
           expanded: !1,
           parent: l
         };
-        n.checkedKeys.filter((t) => i.id === t.id).length > 0 && c.value.push(i), n.expandKeys.filter((t) => i.id === t.id).length > 0 && r.value.push(i), l.children === void 0 && (l.children = []), l.children.push(i), d.value.push(i), a.children && a.children.length && E(a.children, i);
+        n.checkedKeys.filter((r) => t.id === r.id).length > 0 && c.value.push(t), n.expandKeys.filter((r) => t.id === r.id).length > 0 && d.value.push(t), l.children === void 0 && (l.children = []), l.children.push(t), h.value.push(t), i.children && i.children.length && E(i.children, t, a);
       });
     }
-    function L() {
-      u.splice(0, u.length), c.value.splice(0, c.value.length), r.value.splice(0, r.value.length), d.value = [], n.data.forEach((e) => {
-        let l = {
-          label: e.label,
-          id: e.id,
+    function A() {
+      u.splice(0, u.length), c.value.splice(0, c.value.length), d.value.splice(0, d.value.length), h.value = [];
+      let e = { index: 1 };
+      n.data.forEach((l) => {
+        let a = {
+          label: l.label,
+          tabIndex: e.index++,
+          id: l.id,
           children: [],
           checked: 0,
-          disabled: e.disabled,
+          disabled: l.disabled,
           expanded: !1,
           parent: null
         };
-        n.checkedKeys.filter((a) => l.id === a.id).length > 0 && c.value.push(l), n.expandKeys.filter((a) => l.id === a.id).length > 0 && r.value.push(l), e.children && e.children.length && E(e.children, l), u.push(l), d.value.push(l);
-      }), c.value.forEach((e) => {
-        e.checked = 1, n.cascade && (e.children && e.children.length > 0 && o(e, 1), e.parent && p(e, 1));
-      }), r.value.forEach((e) => {
-        e.children && e.children.length > 0 && (e.expanded = !0, e.parent && b(e.parent, !0));
+        n.checkedKeys.filter((i) => a.id === i.id).length > 0 && c.value.push(a), n.expandKeys.filter((i) => a.id === i.id).length > 0 && d.value.push(a), l.children && l.children.length && E(l.children, a, e), u.push(a), h.value.push(a);
+      }), c.value.forEach((l) => {
+        l.checked = 1, n.cascade && (l.children && l.children.length > 0 && o(l, 1), l.parent && p(l, 1));
+      }), d.value.forEach((l) => {
+        l.children && l.children.length > 0 && (l.expanded = !0, l.parent && b(l.parent, !0));
+      }), (!d.value || d.value.length <= 0) && h.value.forEach((l) => {
+        l.expanded = n.expandAll;
       });
     }
     function b(e, l) {
       e.expanded = l, e.parent && b(e.parent, l);
     }
-    function A() {
+    function L() {
       let e = n.checkedKeys.length !== c.value.length;
       e || n.checkedKeys.some((l) => {
         let a = !1;
-        if (d.value.some((i) => {
+        if (h.value.some((i) => {
           if (i.id === l.id)
             return a = !0, !0;
         }), !a)
           return e = !0, !0;
-      }), e || d.value.some((l) => {
+      }), e || h.value.some((l) => {
         let a = !1;
         if (n.checkedKeys.some((i) => {
           if (i.id === l.id)
@@ -143,7 +152,7 @@ const G = { class: "z-tree" }, J = {
         }), !a)
           return e = !0, !0;
       }), e && (c.value.splice(0, c.value.length), n.checkedKeys.forEach((l) => {
-        d.value.some((a) => {
+        h.value.some((a) => {
           if (a.id === l.id)
             return c.value.push(a), !0;
         });
@@ -152,12 +161,12 @@ const G = { class: "z-tree" }, J = {
       }));
     }
     function S() {
-      r.value = [], n.expandKeys.forEach((e) => {
-        d.value.some((l) => {
+      d.value = [], n.expandKeys.forEach((e) => {
+        h.value.some((l) => {
           if (l.id === e.id)
-            return r.value.push(l), !0;
+            return d.value.push(l), !0;
         });
-      }), r.value.forEach((e) => {
+      }), d.value.forEach((e) => {
         e.children && e.children.length > 0 && (e.expanded = !0, e.parent && b(e.parent, !0));
       });
     }
@@ -189,8 +198,8 @@ const G = { class: "z-tree" }, J = {
           if (e.checked !== 1)
             if (n.multipleCheck) {
               let t = !1;
-              c.value.some((h) => {
-                if (h.id === e.id)
+              c.value.some((r) => {
+                if (r.id === e.id)
                   return t = !0, !0;
               }), t || (!n.onlyLeafCheck || n.onlyLeafCheck && (!e.children || e.children.length <= 0)) && c.value.push(e), n.cascade ? (e.checked = 1, n.multipleCheck && (e.children && e.children.length > 0 && o(e, e.checked), e.parent && p(e, e.checked))) : (!n.onlyLeafCheck || n.onlyLeafCheck && (!e.children || e.children.length <= 0)) && (e.checked = 1);
             } else {
@@ -214,9 +223,9 @@ const G = { class: "z-tree" }, J = {
         }
       });
     }
-    function P(e) {
-      const l = r.value.indexOf(e);
-      e.expanded ? (e.expanded = !1, l > -1 && r.value.splice(l, 1)) : (e.expanded = !0, l <= -1 && r.value.push(e));
+    function m(e) {
+      const l = d.value.indexOf(e);
+      e.expanded ? (e.expanded = !1, l > -1 && d.value.splice(l, 1)) : (e.expanded = !0, l <= -1 && d.value.push(e));
     }
     function o(e, l) {
       e.children && e.children.length && e.children.forEach((a) => {
@@ -232,31 +241,36 @@ const G = { class: "z-tree" }, J = {
       if (e.parent) {
         const t = e.parent.checked;
         if (l === 0) {
-          let h = 0;
+          let r = 0;
           (a = e.parent.children) == null || a.some((k) => {
             if (k.checked === 1 || k.checked === 2)
-              return h = 2, !0;
-          }), e.parent.checked = h;
+              return r = 2, !0;
+          }), e.parent.checked = r;
         } else if (l === 1) {
-          let h = 1;
+          let r = 1;
           (i = e.parent.children) == null || i.some((k) => {
             if (k.checked === 0 || k.checked === 2)
-              return h = 2, !0;
-          }), e.parent.checked = h;
+              return r = 2, !0;
+          }), e.parent.checked = r;
         } else
           e.parent.checked = 2;
         if (e.parent.checked !== 1) {
-          const h = c.value.indexOf(e.parent);
-          h > -1 && c.value.splice(h, 1);
+          const r = c.value.indexOf(e.parent);
+          r > -1 && c.value.splice(r, 1);
         } else
           n.onlyLeafCheck || c.value.indexOf(e.parent) <= -1 && c.value.push(e.parent);
         t !== e.parent.checked && p(e.parent, l);
       }
     }
-    return L(), (e, l) => (C(), x("div", G, [
-      !v(u) || v(u).length <= 0 ? (C(), x("div", J, [
+    return A(), (e, l) => (C(), g("div", {
+      class: V(["z-tree", e.treeId])
+    }, [
+      !v(u) || v(u).length <= 0 ? (C(), g("div", J, [
         W("span", null, z(e.emptyTips), 1)
-      ])) : (C(!0), x(F, { key: 1 }, H(v(u), (a, i) => (C(), U(v(q), {
+      ])) : (C(!0), g(F, { key: 1 }, H(v(u), (a, i) => (C(), U(v(q), {
+        "sender-element-id": e.senderElementId,
+        "tree-id": e.treeId,
+        "max-tab-index": h.value.length + 1,
         key: a.id ? a.id : i,
         treeNode: a,
         cascade: e.cascade,
@@ -278,7 +292,7 @@ const G = { class: "z-tree" }, J = {
         checkedNodes: c.value,
         expandKeys: e.expandKeys,
         onCheckboxClick: N,
-        "onUpdate:expandNode": P,
+        "onUpdate:expandNode": m,
         onNodeClick: D,
         onNodeDblclick: O
       }, {
@@ -288,10 +302,10 @@ const G = { class: "z-tree" }, J = {
           })
         ]),
         _: 2
-      }, 1032, ["treeNode", "cascade", "showCheckbox", "transition", "showLine", "expandAll", "checkedAll", "multipleCheck", "onlyLeafCheck", "enableDblclick", "enableWholeAnchorStatus", "enableCheckConfirm", "showId", "idSeparator", "hideLeafIcon", "hideExpander", "nodeContentClickAction", "checkedNodes", "expandKeys"]))), 128))
-    ]));
+      }, 1032, ["sender-element-id", "tree-id", "max-tab-index", "treeNode", "cascade", "showCheckbox", "transition", "showLine", "expandAll", "checkedAll", "multipleCheck", "onlyLeafCheck", "enableDblclick", "enableWholeAnchorStatus", "enableCheckConfirm", "showId", "idSeparator", "hideLeafIcon", "hideExpander", "nodeContentClickAction", "checkedNodes", "expandKeys"]))), 128))
+    ], 2));
   }
 });
 export {
-  Y as default
+  Z as default
 };

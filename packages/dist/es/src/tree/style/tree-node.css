@@ -133,7 +133,6 @@
   /* 固定宽度，不允许缩放 */
   font-size: inherit;
   color: #6e6e6e;
-  cursor: pointer;
   padding: 0 0 0 2px;
   margin-left: 0.5em;
   height: 100%;
@@ -169,6 +168,16 @@
 }
 .z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-content:hover {
   background: rgba(var(--theme-primary-color, 237, 3, 9), 20%);
+}
+.z-tree .z-tree-node .z-tree-node-anchor:focus {
+  outline: none;
+}
+.z-tree .z-tree-node .z-tree-node-anchor:focus .z-tree-node-anchor-content {
+  outline: 1px solid rgba(var(--theme-primary-color, 237, 3, 9), 40%);
+  background: rgba(var(--theme-primary-color, 237, 3, 9), 20%);
+}
+.z-tree .z-tree-node .z-tree-node-anchor-disabled {
+  cursor: not-allowed;
 }
 .z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-checkbox {
   cursor: not-allowed;
@@ -228,10 +237,10 @@
   border-top: 1px dashed #c6c6c6;
 }
 .z-tree .slide-fade-enter-active {
-  transition: all 0.2s ease-out;
+  transition: all 0.1s ease-out;
 }
 .z-tree .slide-fade-leave-active {
-  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .z-tree .slide-fade-enter-from,
 .z-tree .slide-fade-leave-to {

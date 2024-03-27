@@ -2,6 +2,8 @@ import { TreeNodeData, TreeItemProps, TreeNodeContentClickActionEnum } from './t
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<TreeItemProps>, {
     checkedNodes: () => never[];
     expandKeys: () => never[];
+    treeId: string;
+    senderElementId: string;
     cascade: boolean;
     showCheckbox: boolean;
     transition: string;
@@ -26,6 +28,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
 }, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<TreeItemProps>, {
     checkedNodes: () => never[];
     expandKeys: () => never[];
+    treeId: string;
+    senderElementId: string;
     cascade: boolean;
     showCheckbox: boolean;
     transition: string;
@@ -65,6 +69,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     hideLeafIcon: boolean;
     hideExpander: boolean;
     nodeContentClickAction: TreeNodeContentClickActionEnum;
+    senderElementId: string;
+    treeId: string;
 }, {}>, {
     default?(_: {
         treeNode: any;

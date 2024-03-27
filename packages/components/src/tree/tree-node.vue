@@ -1,7 +1,9 @@
 <template>
-  <div class="z-tree-node" :class="showLine ? 'z-tree-node-line' : ''">
-    <div class="z-tree-node-anchor" :class="treeNodeStatusClass(treeNode)" @click="treeNodeClick(treeNode, $event)"
-      @dblclick="treeNodeDblClick(treeNode, $event)">
+  <div class="z-tree-node" :class="treeNodeClass(treeNode)">
+    <div class="z-tree-node-anchor" :id="treeId + '__' + treeNode.tabIndex" :tabIndex="treeNode.tabIndex"
+      :class="treeNodeStatusClass(treeNode)" @keydown.down.prevent="downKeyDown" @keydown.up.prevent="upKeyDown"
+      @keydown.left.prevent="leftKeyDown" @keydown.right.prevent="rightKeyDown" @keydown.enter.prevent="enterKeyDown"
+      @click="treeNodeClick(treeNode, $event)" @dblclick="treeNodeDblClick(treeNode, $event)">
       <span class="z-tree-node-anchor-arrow" v-if="!hideExpander">
         <!-- 折叠图标1 -->
         <span class="z-tree-node-anchor-arrow-expander" v-if="treeNode.children && treeNode.children.length"
@@ -88,9 +90,10 @@
     </div>
     <Transition :name="transition" mode="out-in">
       <div class="z-tree-node-child" v-if="treeNode.expanded">
-        <tree-node v-for="(node, index) in treeNode.children" mode="out-in" :key="node.id ? node.id : index"
-          :cascade="cascade" :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine"
-          :expandAll="expandAll" :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
+        <tree-node v-for="(node, index) in treeNode.children" :sender-element-id="senderElementId" mode="out-in"
+          :key="node.id ? node.id : index" :tree-id="treeId" :max-tab-index="maxTabIndex" :cascade="cascade"
+          :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine" :expandAll="expandAll"
+          :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
           :enableDblclick="enableDblclick" :enableWholeAnchorStatus="enableWholeAnchorStatus"
           :enableCheckConfirm="enableCheckConfirm" :showId="showId" :idSeparator="idSeparator"
           :hideLeafIcon="hideLeafIcon" :hideExpander="hideExpander" :nodeContentClickAction="nodeContentClickAction"
@@ -126,6 +129,8 @@ const props = withDefaults(defineProps<TreeItemProps>(), {
   expandKeys: () => {
     return []
   },
+  treeId: '',
+  senderElementId: '',
   cascade: true,
   showCheckbox: false,
   transition: 'slide-fade',
@@ -168,6 +173,16 @@ function treeNodeStatusClass(node: TreeNodeData) {
     })
   }
   // 判断是否disabled
+  return clazzs
+}
+
+// 节点隐藏及节点线class
+function treeNodeClass(node: TreeNodeData) {
+  let clazzs = ''
+  // 判断是否显示line
+  if (props.showLine) {
+    clazzs += ' z-tree-node-line'
+  }
   return clazzs
 }
 
@@ -251,4 +266,68 @@ function checkboxClick(node: TreeNodeData, e: MouseEvent) {
 function checkboxClickBubbleEvent(node: TreeNodeData, e: MouseEvent) {
   emit('checkbox-click', node, e)
 }
-</script>./type
+
+// 上键点击事件
+function upKeyDown() {
+  rollUp(props.treeNode.tabIndex ?? 0)
+}
+function rollUp(tabIndex: number) {
+  const nodeEle = document.querySelector('#' + props.treeId + '__' + (tabIndex - 1))
+  if (nodeEle) {
+    nodeEle.focus()
+  } else {
+    if (tabIndex > 0) {
+      rollUp(tabIndex - 1)
+    } else {
+      if (props.senderElementId) {
+        const senderElement = document.querySelector('#' + props.senderElementId);
+        if (senderElement) {
+          senderElement.focus()
+        }
+      }
+      // 跳回
+      // emit('up-key-to-leave', props.treeNode)
+    }
+  }
+}
+
+// 下键点击事件
+function downKeyDown() {
+  rollDown(props.treeNode.tabIndex ?? 0)
+}
+function rollDown(tabIndex: number) {
+  const domEle = document.querySelector('#' + props.treeId + '__' + (tabIndex + 1))
+  if (domEle) {
+    domEle.focus()
+  } else {
+    if (tabIndex <= props.maxTabIndex && tabIndex <= Number.MAX_SAFE_INTEGER) {
+      rollDown(tabIndex + 1)
+    }
+  }
+}
+
+// 回车事件
+function enterKeyDown() {
+  checkboxClick(props.treeNode, new MouseEvent('click'))
+  // 仅限节点可用，单选模式下有效
+  if (props.senderElementId && !props.multipleCheck && !props.treeNode.disabled &&
+    (
+      (props.onlyLeafCheck && (!props.treeNode.children || props.treeNode.children.length <= 0))
+      || !props.onlyLeafCheck
+    )
+  ) {
+    const senderElement = document.querySelector('#' + props.senderElementId);
+    if (senderElement) {
+      senderElement.focus()
+    }
+  }
+}
+// 方向键右键事件
+function rightKeyDown() {
+  props.treeNode.expanded = true
+}
+// 方向键左键事件
+function leftKeyDown() {
+  props.treeNode.expanded = false
+}
+</script>

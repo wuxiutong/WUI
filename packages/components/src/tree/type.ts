@@ -50,13 +50,15 @@ interface config {
   idSeparator?: string
   hideLeafIcon?: boolean
   hideExpander?: boolean
-  nodeContentClickAction?: TreeNodeContentClickActionEnum
+  nodeContentClickAction?: TreeNodeContentClickActionEnum 
+  senderElementId?: string
+  treeId: string
 }
 /** 
  * @param {string} emptyTips - 内容为空的提示信息
  */
 export interface TreeConfig extends config  {
-    emptyTips:string
+    emptyTips?:string
 }
 /**
  * @description: 树组件选中项数据结构0 | 1 | 2，分别代表未选中、选中、半选中
@@ -69,7 +71,9 @@ export interface TreeOriginalData {
   label: string
   id: StringOrNumber
   children?: TreeOriginalData[]
-  disabled?: boolean
+  disabled?: boolean 
+  parentId?: StringOrNumber
+  parent?: TreeOriginalData | null
 }
 /**
  * @description: 树组件内部项所需参数
@@ -78,6 +82,7 @@ export interface TreeItemProps extends config   {
   treeNode: TreeNodeData
   checkedNodes?: TreeNodeData[]
   expandKeys?: TreeExpandKeys[]
+  maxTabIndex: number
 }
 /**
  * @description: 树组件所需参数
@@ -85,19 +90,20 @@ export interface TreeItemProps extends config   {
 export interface TreeProps extends TreeConfig { 
   data?: TreeOriginalData[]
   checkedKeys?: TreeCheckedKeys[]
-  expandKeys?: TreeExpandKeys[]
+  expandKeys?: TreeExpandKeys[] 
 }
 /**
  * @description: 树组件内部项数据结构
  */
 export type TreeNodeData = {
   label: string
+  tabIndex?: number
   id: StringOrNumber
   children?: TreeNodeData[]
   checked: TreeNodeCheckedType
   disabled?: boolean
   expanded?: boolean
-  parent: TreeNodeData | null
+  parent: TreeNodeData | null  
 }
 /**
  * @description: 树组件选中项数据结构
@@ -121,13 +127,13 @@ export interface TreeNodeEmits {
   (e: 'update:expandNode', node: TreeNodeData): void
   (e: 'checkbox-click', node: TreeNodeData, eventParam: MouseEvent): void
   (e: 'node-click', node: TreeNodeData, eventParam: MouseEvent): void
-  (e: 'node-dblclick', node: TreeNodeData, eventParam: MouseEvent): void
+  (e: 'node-dblclick', node: TreeNodeData, eventParam: MouseEvent): void 
 }
 /**
  * 树响应事件
  */
 export interface TreeEmits {
   (e: 'update:checkedKeys', keys: TreeCheckedKeys[]): void
-  (e: 'tree-node-click', node: TreeNodeData,  eventParam?: MouseEvent): void
+  (e: 'tree-node-click', node: TreeNodeData,  eventParam?: MouseEvent): void 
   (e: 'tree-node-checkbox-click', node: TreeNodeData,fn?: Function, eventParam?: MouseEvent): void
 }

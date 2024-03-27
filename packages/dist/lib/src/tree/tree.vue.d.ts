@@ -3,6 +3,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     data: () => never[];
     checkedKeys: () => never[];
     expandKeys: () => never[];
+    senderElementId: string;
+    treeId: () => string;
     cascade: boolean;
     showCheckbox: boolean;
     transition: string;
@@ -28,6 +30,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     data: () => never[];
     checkedKeys: () => never[];
     expandKeys: () => never[];
+    senderElementId: string;
+    treeId: () => string;
     cascade: boolean;
     showCheckbox: boolean;
     transition: string;
@@ -67,6 +71,8 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     hideLeafIcon: boolean;
     hideExpander: boolean;
     nodeContentClickAction: TreeNodeContentClickActionEnum;
+    senderElementId: string;
+    treeId: string;
     data: TreeOriginalData[];
     checkedKeys: TreeCheckedKeys[];
     emptyTips: string;
