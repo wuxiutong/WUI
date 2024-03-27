@@ -8,7 +8,7 @@ export declare enum TreeNodeContentClickActionEnum {
     EXPAND = "expand",
     CHECK = "check",
     NONE = "none",
-    "" = ""
+    '' = ""
 }
 /**
  * @description: 树组件配置项
@@ -68,8 +68,8 @@ export interface TreeOriginalData {
     id: StringOrNumber;
     children?: TreeOriginalData[];
     disabled?: boolean;
-    parentId?: StringOrNumber;
-    parent?: TreeOriginalData | null;
+    __parentId?: StringOrNumber;
+    __parent?: TreeOriginalData | null;
 }
 /**
  * @description: 树组件内部项所需参数
@@ -99,7 +99,7 @@ export type TreeNodeData = {
     checked: TreeNodeCheckedType;
     disabled?: boolean;
     expanded?: boolean;
-    parent: TreeNodeData | null;
+    __parent: TreeNodeData | null;
 };
 /**
  * @description: 树组件选中项数据结构

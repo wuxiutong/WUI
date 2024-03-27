@@ -1,4 +1,3 @@
-
 import { ref } from 'vue'
 
 export type StringFn = () => string
@@ -11,7 +10,7 @@ export enum TreeNodeContentClickActionEnum {
   EXPAND = 'expand',
   CHECK = 'check',
   NONE = 'none',
-  "" = ''
+  '' = '',
 }
 
 /**
@@ -42,23 +41,23 @@ interface config {
   expandAll?: boolean
   checkedAll?: boolean
   multipleCheck?: boolean
-  onlyLeafCheck?: boolean 
+  onlyLeafCheck?: boolean
   enableDblclick?: boolean
   enableWholeAnchorStatus?: boolean
-  enableCheckConfirm:boolean
+  enableCheckConfirm: boolean
   showId?: boolean
   idSeparator?: string
   hideLeafIcon?: boolean
   hideExpander?: boolean
-  nodeContentClickAction?: TreeNodeContentClickActionEnum 
+  nodeContentClickAction?: TreeNodeContentClickActionEnum
   senderElementId?: string
   treeId: string
 }
-/** 
+/**
  * @param {string} emptyTips - 内容为空的提示信息
  */
-export interface TreeConfig extends config  {
-    emptyTips?:string
+export interface TreeConfig extends config {
+  emptyTips?: string
 }
 /**
  * @description: 树组件选中项数据结构0 | 1 | 2，分别代表未选中、选中、半选中
@@ -71,14 +70,14 @@ export interface TreeOriginalData {
   label: string
   id: StringOrNumber
   children?: TreeOriginalData[]
-  disabled?: boolean 
-  parentId?: StringOrNumber
-  parent?: TreeOriginalData | null
+  disabled?: boolean
+  __parentId?: StringOrNumber
+  __parent?: TreeOriginalData | null
 }
 /**
  * @description: 树组件内部项所需参数
  */
-export interface TreeItemProps extends config   { 
+export interface TreeItemProps extends config {
   treeNode: TreeNodeData
   checkedNodes?: TreeNodeData[]
   expandKeys?: TreeExpandKeys[]
@@ -87,10 +86,10 @@ export interface TreeItemProps extends config   {
 /**
  * @description: 树组件所需参数
  */
-export interface TreeProps extends TreeConfig { 
+export interface TreeProps extends TreeConfig {
   data?: TreeOriginalData[]
   checkedKeys?: TreeCheckedKeys[]
-  expandKeys?: TreeExpandKeys[] 
+  expandKeys?: TreeExpandKeys[]
 }
 /**
  * @description: 树组件内部项数据结构
@@ -103,7 +102,7 @@ export type TreeNodeData = {
   checked: TreeNodeCheckedType
   disabled?: boolean
   expanded?: boolean
-  parent: TreeNodeData | null  
+  __parent: TreeNodeData | null
 }
 /**
  * @description: 树组件选中项数据结构
@@ -127,13 +126,18 @@ export interface TreeNodeEmits {
   (e: 'update:expandNode', node: TreeNodeData): void
   (e: 'checkbox-click', node: TreeNodeData, eventParam: MouseEvent): void
   (e: 'node-click', node: TreeNodeData, eventParam: MouseEvent): void
-  (e: 'node-dblclick', node: TreeNodeData, eventParam: MouseEvent): void 
+  (e: 'node-dblclick', node: TreeNodeData, eventParam: MouseEvent): void
 }
 /**
  * 树响应事件
  */
 export interface TreeEmits {
   (e: 'update:checkedKeys', keys: TreeCheckedKeys[]): void
-  (e: 'tree-node-click', node: TreeNodeData,  eventParam?: MouseEvent): void 
-  (e: 'tree-node-checkbox-click', node: TreeNodeData,fn?: Function, eventParam?: MouseEvent): void
+  (e: 'tree-node-click', node: TreeNodeData, eventParam?: MouseEvent): void
+  (
+    e: 'tree-node-checkbox-click',
+    node: TreeNodeData,
+    fn?: Function,
+    eventParam?: MouseEvent
+  ): void
 }

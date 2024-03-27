@@ -77,7 +77,39 @@ import type { TreeOriginalData } from '@wuxiutong/wui'
 // import { TreeNodeContentClickActionEnum, } from '@WUI/components'
 // import type { TreeOriginalData } from '@WUI/components'
 import { TreeCheckedKeys, TreeNodeData } from 'packages/components';
-let treeDataSrc: TreeOriginalData[] = [{ label: '第一级1', id: '1', parentId: '' }, { label: '第二级1', id: '2', parentId: '1' }, { label: '第三级1', id: '3', parentId: '2' }, { label: '第三级2', id: '4', parentId: '2' }, { label: '第三级5', id: '5', parentId: '2' }, { label: '第一级2', id: '7', parentId: '' }, { label: '第一级3', id: '8', parentId: '' }, { label: '第二级1', id: '9', parentId: '8' },]
+let treeDataSrc: TreeOriginalData[] = [
+	{
+		label: '所有',
+		id: '0',
+		__parentId: '', children: []
+	},
+	{
+		label: '第一级1',
+		id: '1',
+		__parentId: '0'
+	},
+	{
+		label: '第一级1-1 这一定特别长长长长长长长长长长长长长长长长长长长长长尾巴',
+		id: '1-1',
+		__parentId: '1'
+	},
+	{ label: '第一级1-2', id: '1-2', __parentId: '1' },
+	{ label: '第一级1-3', id: '1-3', __parentId: '1', disabled: true },
+	{
+		label: '第一级2',
+		id: '2',
+		__parentId: '0'
+	},
+	{ label: '第一级2-1', id: '2-1', __parentId: '2' },
+	{ label: '第一级2-2', id: '2-2', __parentId: '2' },
+	{ label: '第一级有末级3', id: '2-3', __parentId: '2' },
+	{ label: '第一级2-3-1', id: '2-3-1', __parentId: '2-3' },
+	{ label: '第一级2-3-2', id: '2-3-2', __parentId: '2-3' },
+	{ label: '第一级有末级4', id: '2-4', __parentId: '2' },
+	{ label: '第一级2-4-1', id: '2-4-1', __parentId: '2-4' },
+	{ label: '第一级2-4-2', id: '2-4-2', __parentId: '2-4' },
+	{ label: '第一级2-4-3', id: '2-4-3', __parentId: '2-4' }
+]
 
 let treeData = ref<TreeOriginalData[]>()
 
@@ -103,46 +135,7 @@ function switchTheme(flag: string) {
 }
 
 function loadData() {
-	treeDataSrc = [
-		{
-			label: '第一级1(这个节点应该隐藏)', id: '1', children: [
-				{ label: '第一级1-1 ', id: '1-1' },
-				{ label: '第一级1-2', id: '1-2', },
-				{
-					label: '第一级第二层', id: '1-3', children: [
-						{
-							label: '第一级第三层', id: '1-3-1', children: [
-								{ label: '第一级1-3-1-1 ', id: '1-3-1-1' },
-								{ label: '第一级1-3-1-2', id: '1-3-1-2' },
-								{ label: '第一级1-3-1-3', id: '1-3-1-3' }
-							]
-						}]
-				}
-			]
-		},
-		{
-			label: '第一级2', id: '2', disabled: true, children: [
-				{ label: '第一级2-1', id: '2-1' },
-				{ label: '第一级2-2', id: '2-2' },
-				{ label: '第一级2-3', id: '2-3' }
-			]
-		},
-		{
-			label: '第一级3', id: '3', children: [
-				{ label: '第一级3-1', id: '3-1' },
-				{ label: '第一级3-2', id: '3-2' },
-				{ label: '第一级3-3', id: '3-3' }
-			]
-		},
-		{
-			label: '第一级4', id: '4', children: [
-				{ label: '第一级4-1', id: '5-1' },
-				{ label: '第一级5-2', id: '5-2' },
-				{ label: '第一级5-3', id: '5-3' }
-			]
-		}
-	]
-	treeData.value = [...treeDataSrc]
+	treeData.value = TreeUtils.buildParentAndChildren(treeDataSrc, true)
 }
 function clearData() {
 	treeData.value.splice(0, treeData.value.length)
@@ -161,7 +154,6 @@ function treeNodeCheckboxClick(node: TreeNodeData, fn: Function, e: MouseEvent) 
 	} else {
 		// console.log('无需确认')
 	}
-
 }
 
 function increaseFontSize() {

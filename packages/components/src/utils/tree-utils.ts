@@ -1,11 +1,5 @@
 import { TreeOriginalData } from '../tree'
 
-interface TreeOriginalDataLevel {
-  rootNodes: TreeOriginalData[]
-  middleNodes: TreeOriginalData[]
-  leafNodes: TreeOriginalData[]
-}
-
 /**
  *
  * @param node 递归遍历清除父节点，并且重新复制新的children
@@ -14,7 +8,8 @@ function recursionRemoveParent(node: TreeOriginalData) {
   if (node.children && node.children.length > 0) {
     let children: TreeOriginalData[] = []
     node.children.forEach((element) => {
-      element = { parent: null, ...element }
+      element = Object.assign({}, element)
+      delete element.__parent
       children.push(element)
       recursionRemoveParent(element)
     })
@@ -28,7 +23,7 @@ function recursionRemoveParent(node: TreeOriginalData) {
 function recursionAddParent(node: TreeOriginalData) {
   if (node.children && node.children.length > 0) {
     node.children.forEach((element) => {
-      element.parent = node
+      element.__parent = node
       recursionAddParent(element)
     })
   }
@@ -85,7 +80,7 @@ function recursionRemoveChild(
   }
   // 不匹配并且没有子级则将其从父请children中删除，并且返回-1
   if ((!node.children || node.children.length <= 0) && !isMatched) {
-    node.parent?.children?.splice(node.parent.children.indexOf(node), 1)
+    node.__parent?.children?.splice(node.__parent.children.indexOf(node), 1)
     return -1
   }
   return 0
@@ -96,35 +91,37 @@ function recursionRemoveChild(
  */
 const TreeUtils = {
   /**
-   * 重组所有节点的parent和children，原始数据支持两种模式一种是parentId模式：{id:'',label:'',parentId:''}；另一种是children模式：{id:'',label:'',children:[]}，返回数据结果{id:'',label:'',children:[],parent:{}}
-   * @param rootNodes 原始数据（该数据源不会被改变，放方法会返回新的数组）
-   * @param parentIdMode 指定数据源是否采用parentId数据结构模式，否则就是children结构模式。
-   * @returns 返回数据结果{id:'',label:'',children:[],parent:{}}
+   * 重组所有节点的__parent和children，原始数据支持两种模式一种是__parentId模式：{id:'',label:'',__parentId:''}；另一种是children模式：{id:'',label:'',children:[]}，返回数据结果{id:'',label:'',children:[],__parent:{}}
+   * @param srcNodes 原始数据（该数据源不会被改变，放方法会返回新的数组）
+   * @param __parentIdMode 指定数据源是否采用__parentId数据结构模式，否则就是children结构模式。
+   * @returns 返回数据结果{id:'',label:'',children:[],__parent:{}}
    */
   buildParentAndChildren: function (
-    rootNodes: TreeOriginalData[],
-    parentIdMode: boolean
+    srcNodes: TreeOriginalData[],
+    __parentIdMode: boolean
   ): TreeOriginalData[] {
-    //1、parentId模式
-    if (parentIdMode) {
-      // 清除原始的children及parent，解构成新对象
+    //1、__parentId模式
+    if (__parentIdMode) {
+      // 清除原始的children及__parent，解构成新对象
       let array: TreeOriginalData[] = []
-      for (let i = 0; i < rootNodes.length; i++) {
-        const node = { parent: null, children: [], ...rootNodes[i] }
+      for (let i = 0; i < srcNodes.length; i++) {
+        const node = Object.assign({}, srcNodes[i])
+        delete node.__parent
+        node.children = []
         array.push(node)
       }
-      // 添加children及parent
+      // 添加children及__parent
       for (let i = 0; i < array.length; i++) {
         const node = array[i]
         const id = String(node.id)
-        const parentId = String(node.parentId)
+        const __parentId = String(node.__parentId)
         array.some((item) => {
-          if (String(item.id) === parentId) {
+          if (String(item.id) === __parentId) {
             if (!item.children) {
               item.children = []
             }
             item.children?.push(node)
-            node.parent = item
+            node.__parent = item
             return true
           }
         })
@@ -133,26 +130,27 @@ const TreeUtils = {
       let array2: TreeOriginalData[] = []
       for (let i = 0; i < array.length; i++) {
         const node = array[i]
-        if (!node.parent) {
+        if (!node.__parent) {
           array2.push(node)
         }
       }
       return array2
     } else {
       // 2、children结构数据
-      // 先清除parent,然后复制一份数据，再添加parent
+      // 先清除__parent,然后复制一份数据，再添加__parent
       let array: TreeOriginalData[] = []
-      for (let i = 0; i < rootNodes.length; i++) {
-        const node = { parent: null, ...rootNodes[i] }
+      for (let i = 0; i < srcNodes.length; i++) {
+        const node = Object.assign({}, srcNodes[i])
+        delete node.__parent
         if (node.children && node.children.length > 0) {
           recursionRemoveParent(node)
         }
         array.push(node)
       }
-      // 循环添加parent
+      // 循环添加__parent
       for (let i = 0; i < array.length; i++) {
         const node = array[i]
-        node.parent = null
+        node.__parent = null
         if (node.children && node.children.length > 0) {
           recursionAddParent(node)
         }
@@ -162,21 +160,63 @@ const TreeUtils = {
   },
 
   /**
-   * 根据关键字搜索（id或label包含关键字即匹配）树节点，其中：如果上级节点匹配，则保留叶子节点，原始数据支持两种模式一种是parentId模式：{id:'',label:'',parentId:''}；另一种是children模式：{id:'',label:'',children:[]}
+   * 重组所有节点的children，同时会清空__parent，原始数据支持是__parentId模式：{id:'',label:'',__parentId:''}
+   * @param srcNodes 原始数据（该数据源不会被改变，该方法会返回新的数组）
+   * @returns 返回数据结果{id:'',label:'',children:[]}
+   */
+  buildChildren: function (srcNodes: TreeOriginalData[]): TreeOriginalData[] {
+    //1、__parentId模式
+    // 清除原始的children及__parent，解构成新对象
+    let array: TreeOriginalData[] = []
+    for (let i = 0; i < srcNodes.length; i++) {
+      const node = Object.assign({}, srcNodes[i])
+      delete node.__parent
+      node.children = []
+      array.push(node)
+    }
+    // 添加children及__parent
+    for (let i = 0; i < array.length; i++) {
+      const node = array[i]
+      const id = String(node.id)
+      const __parentId = String(node.__parentId)
+      array.some((item) => {
+        if (String(item.id) === __parentId) {
+          if (!item.children) {
+            item.children = []
+          }
+          item.children?.push(node)
+          node.__parent = item
+          return true
+        }
+      })
+    }
+    // 找到根节点、拉起来一拉起来即可
+    let array2: TreeOriginalData[] = []
+    for (let i = 0; i < array.length; i++) {
+      const node = array[i]
+      if (!node.__parent) {
+        array2.push(node)
+      }
+    }
+    return array2
+  },
+
+  /**
+   * 根据关键字搜索（id或label包含关键字即匹配）树节点，其中：如果上级节点匹配，则保留叶子节点，原始数据支持两种模式一种是__parentId模式：{id:'',label:'',__parentId:''}；另一种是children模式：{id:'',label:'',children:[]}
    * @param treeDataSrc 原始数据（该数据源不会被改变，放方法会返回新的数组）
    * @param keyWords 搜索关键字
-   * @param parentIdMode 原始数据属于parentId模式，否则就是children模式
+   * @param __parentIdMode 原始数据属于__parentId模式，否则就是children模式
    * @param exactMatch 是否精准匹配
-   * @returns 返回数据结果{id:'',label:'',children:[],parent:{}}
+   * @returns 返回数据结果{id:'',label:'',children:[],__parent:{}}
    */
   searchIdAndLabel: function (
     treeDataSrc: TreeOriginalData[],
     keyWords: string,
-    parentIdMode: boolean,
+    __parentIdMode: boolean,
     exactMatch: boolean = false
   ): TreeOriginalData[] {
     // 添加了上下级次
-    let array = this.buildParentAndChildren(treeDataSrc, parentIdMode)
+    let array = this.buildParentAndChildren(treeDataSrc, __parentIdMode)
     // 关键字为空则返回所有
     if (!keyWords || keyWords.length <= 0) {
       return array
@@ -207,21 +247,21 @@ const TreeUtils = {
     return array
   },
   /**
-   * 根据关键字搜索（id）树节点，其中：如果上级节点匹配，则保留叶子节点，其中：如果上级节点匹配，则保留叶子节点，原始数据支持两种模式一种是parentId模式：{id:'',label:'',parentId:''}；另一种是children模式：{id:'',label:'',children:[]}
+   * 根据关键字搜索（id）树节点，其中：如果上级节点匹配，则保留叶子节点，其中：如果上级节点匹配，则保留叶子节点，原始数据支持两种模式一种是__parentId模式：{id:'',label:'',__parentId:''}；另一种是children模式：{id:'',label:'',children:[]}
    * @param treeDataSrc 原始数据（该数据源不会被改变，放方法会返回新的数组）
    * @param keyWords 搜索关键字
-   * @param parentIdMode 原始数据属于parentId模式，否则就是children模式
+   * @param __parentIdMode 原始数据属于__parentId模式，否则就是children模式
    * @param exactMatch 是否精准匹配
-   * @returns 返回数据结果{id:'',label:'',children:[],parent:{}}
+   * @returns 返回数据结果{id:'',label:'',children:[],__parent:{}}
    */
   searchId: function (
     treeDataSrc: TreeOriginalData[],
     keyWords: string,
-    parentIdMode: boolean,
+    __parentIdMode: boolean,
     exactMatch: boolean = false
   ): TreeOriginalData[] {
     // 添加了上下级次
-    let array = this.buildParentAndChildren(treeDataSrc, parentIdMode)
+    let array = this.buildParentAndChildren(treeDataSrc, __parentIdMode)
     // 关键字为空则返回所有
     if (!keyWords || keyWords.length <= 0) {
       return array
@@ -248,21 +288,21 @@ const TreeUtils = {
     return array
   },
   /**
-   * 根据关键字搜索（label）树节点，其中：如果上级节点匹配，其中：如果上级节点匹配，则保留叶子节点，原始数据支持两种模式一种是parentId模式：{id:'',label:'',parentId:''}；另一种是children模式：{id:'',label:'',children:[]}
+   * 根据关键字搜索（label）树节点，其中：如果上级节点匹配，其中：如果上级节点匹配，则保留叶子节点，原始数据支持两种模式一种是__parentId模式：{id:'',label:'',__parentId:''}；另一种是children模式：{id:'',label:'',children:[]}
    * @param treeDataSrc 原始数据（该数据源不会被改变，放方法会返回新的数组）
    * @param keyWords 搜索关键字
-   * @param parentIdMode 原始数据属于parentId模式，否则就是children模式
+   * @param __parentIdMode 原始数据属于__parentId模式，否则就是children模式
    * @param exactMatch 是否精准匹配
-   * @returns 返回数据结果{id:'',label:'',children:[],parent:{}}
+   * @returns 返回数据结果{id:'',label:'',children:[],__parent:{}}
    */
   searchLabel: function (
     treeDataSrc: TreeOriginalData[],
     keyWords: string,
-    parentIdMode: boolean,
+    __parentIdMode: boolean,
     exactMatch: boolean = false
   ): TreeOriginalData[] {
     // 添加了上下级次
-    let array = this.buildParentAndChildren(treeDataSrc, parentIdMode)
+    let array = this.buildParentAndChildren(treeDataSrc, __parentIdMode)
     // 关键字为空则返回所有
     if (!keyWords || keyWords.length <= 0) {
       return array
