@@ -32,6 +32,9 @@ export enum TreeNodeContentClickActionEnum {
  * @param {boolean} hideLeafIcon - 是否隐藏叶子节点图标
  * @param {boolean} hideExpander - 是否隐藏展开图标,通常只有一层，当做list列表使用时设置为隐藏
  * @param {string} nodeContentClickAction - 点击节点内容的行为，expand: 展开/折叠节点, check: 选中/取消选中节点, none: 无行为
+ * @param {string} senderElementId - 给一个外部DOM的ID,用户单选模式下回车、向上方向键或ESC返回焦点到该ID的DOM上
+ * @param {string} treeId - 给予树一个唯一ID,建议是uuid或者使用utils中的randomString函数生成字符串值，后续可以通过该DOM id获取到树DOM也可以通过拼接组合treeId值+'__1、2、3...'然后通过DOM id选择器来获取到树节点DOM
+ * @param {string} focusedId - 通过该值的设置树中焦点选中到指定数据ID中（注：该id是TreeOriginData中的id、而非dom id.）
  */
 interface config {
   cascade?: boolean
@@ -51,7 +54,8 @@ interface config {
   hideExpander?: boolean
   nodeContentClickAction?: TreeNodeContentClickActionEnum
   senderElementId?: string
-  treeId: string
+  treeId?: string
+  focusedId?: string | number
 }
 /**
  * @param {string} emptyTips - 内容为空的提示信息
@@ -82,6 +86,7 @@ export interface TreeItemProps extends config {
   checkedNodes?: TreeNodeData[]
   expandKeys?: TreeExpandKeys[]
   maxTabIndex: number
+  treeNodeList: TreeNodeData[]
 }
 /**
  * @description: 树组件所需参数

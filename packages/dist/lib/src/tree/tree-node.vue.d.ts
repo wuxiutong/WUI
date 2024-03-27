@@ -19,6 +19,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     hideLeafIcon: boolean;
     hideExpander: boolean;
     nodeContentClickAction: TreeNodeContentClickActionEnum;
+    treeNodeList: () => never[];
 }>, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
     "update:checkedNode": (node: TreeNodeData) => void;
     "update:expandNode": (node: TreeNodeData) => void;
@@ -45,6 +46,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
     hideLeafIcon: boolean;
     hideExpander: boolean;
     nodeContentClickAction: TreeNodeContentClickActionEnum;
+    treeNodeList: () => never[];
 }>>> & {
     "onUpdate:checkedNode"?: ((node: TreeNodeData) => any) | undefined;
     "onUpdate:expandNode"?: ((node: TreeNodeData) => any) | undefined;
@@ -54,6 +56,7 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<__
 }, {
     checkedNodes: TreeNodeData[];
     expandKeys: import("./type").TreeExpandKeys[];
+    treeNodeList: TreeNodeData[];
     cascade: boolean;
     showCheckbox: boolean;
     transition: "" | "slide-fade";

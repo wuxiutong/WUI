@@ -5,7 +5,8 @@
 		<fieldset>
 			<div class="buttons">
 				<span>搜索:</span>
-				<input id='__searchInput' v-model="keywords" @keydown.down="searchKeyDown" @keydown.enter="searchKeywords" />
+				<input id='__searchInput' v-model="keywords" @keydown.down.prevent="searchKeyDown"
+					@keydown.enter.prevent="searchKeywords" />
 				<button @click="hideLeafIcon = !hideLeafIcon" class="theme-button blue">{{
 					hideLeafIcon ? '显示末级图标' : '隐藏末级图标'
 				}}</button>
@@ -54,7 +55,7 @@
 		:show-line="showLine" :checkedAll="checkedAll" :hideLeafIcon="hideLeafIcon" :cascade="cascade"
 		:expand-all="expandAll" :showCheckbox="showCheckbox" :multipleCheck="multipleCheck"
 		:nodeContentClickAction="nodeContentClickAction" :enableCheckConfirm="enableCheckConfirm"
-		:onlyLeafCheck="onlyLeafCheck" :enableDbclick="true" @update:checkedKeys="checkedChanged"
+		:onlyLeafCheck="onlyLeafCheck" :enableDbclick="true" @update:checkedKeys="checkedChanged" :focused-id="focusedId"
 		@tree-node-checkbox-click="treeNodeCheckboxClick" idSeparator="&nbsp;&nbsp;&nbsp;">
 		<!-- <template v-slot="slotProps">
 			<div class="tree-node-content-div">
@@ -127,6 +128,7 @@ let fontSize = ref<number>(14);
 let checkedAll = ref<boolean>(false);
 let randomStr = randomString(32)
 let keywords = ref<string>('')
+let focusedId = ref<string>('')
 function switchTheme(flag: string) {
 	document.documentElement.style.setProperty(
 		"--theme-primary-color",
@@ -182,10 +184,15 @@ function defaultFontSize() {
 
 // 搜索框汇总向下方向键按下事件
 function searchKeyDown(e: KeyboardEvent) {
-	let dom = document.querySelector("#" + randomStr + "__" + 1)
-	if (dom) {
-		dom.focus()
-	}
+	focusedId.value = "2-3-1"
+	// 清空focusedId
+	setTimeout(() => {
+		focusedId.value = ""
+	}, 100)
+	// let dom = document.querySelector("#" + randomStr + "__" + 1)
+	// if (dom) {
+	// 	dom.focus()
+	// }
 }
 
 // 搜索框回车事件

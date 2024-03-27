@@ -2,8 +2,9 @@
   <div class="z-tree-node" :class="treeNodeClass(treeNode)">
     <div class="z-tree-node-anchor" :id="treeId + '__' + treeNode.tabIndex" :tabIndex="treeNode.tabIndex"
       :class="treeNodeStatusClass(treeNode)" @keydown.down.prevent="downKeyDown" @keydown.up.prevent="upKeyDown"
-      @keydown.left.prevent="leftKeyDown" @keydown.right.prevent="rightKeyDown" @keydown.enter.prevent="enterKeyDown"
-      @click="treeNodeClick(treeNode, $event)" @dblclick="treeNodeDblClick(treeNode, $event)">
+      @keydown.esc.prevent="escKeyDown" @keydown.left.prevent="leftKeyDown" @keydown.right.prevent="rightKeyDown"
+      @keydown.enter.prevent="enterKeyDown" @click="treeNodeClick(treeNode, $event)"
+      @dblclick="treeNodeDblClick(treeNode, $event)">
       <span class="z-tree-node-anchor-arrow" v-if="!hideExpander">
         <!-- 折叠图标1 -->
         <span class="z-tree-node-anchor-arrow-expander" v-if="treeNode.children && treeNode.children.length"
@@ -91,9 +92,9 @@
     <Transition :name="transition" mode="out-in">
       <div class="z-tree-node-child" v-if="treeNode.expanded">
         <tree-node v-for="(node, index) in treeNode.children" :sender-element-id="senderElementId" mode="out-in"
-          :key="node.id ? node.id : index" :tree-id="treeId" :max-tab-index="maxTabIndex" :cascade="cascade"
-          :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine" :expandAll="expandAll"
-          :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
+          :tree-node-list="treeNodeList" :key="node.id ? node.id : index" :tree-id="treeId" :max-tab-index="maxTabIndex"
+          :cascade="cascade" :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine"
+          :expandAll="expandAll" :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
           :enableDblclick="enableDblclick" :enableWholeAnchorStatus="enableWholeAnchorStatus"
           :enableCheckConfirm="enableCheckConfirm" :showId="showId" :idSeparator="idSeparator"
           :hideLeafIcon="hideLeafIcon" :hideExpander="hideExpander" :nodeContentClickAction="nodeContentClickAction"
@@ -118,7 +119,6 @@ import './style/tree-node.less'
 import { TreeNode } from './tree-node'
 import { ref, defineProps, watch, Transition } from 'vue'
 import { TreeNodeData, TreeItemProps, TreeNodeEmits, TreeNodeContentClickActionEnum, TreeConfig } from './type'
-import { tree } from 'gulp';
 /**
 参数
 */
@@ -145,7 +145,10 @@ const props = withDefaults(defineProps<TreeItemProps>(), {
   idSeparator: '',
   hideLeafIcon: false,
   hideExpander: false,
-  nodeContentClickAction: TreeNodeContentClickActionEnum.NONE
+  nodeContentClickAction: TreeNodeContentClickActionEnum.NONE,
+  treeNodeList: () => {
+    return []
+  },
 })
 /**
  * data
@@ -266,42 +269,42 @@ function checkboxClick(node: TreeNodeData, e: MouseEvent) {
 function checkboxClickBubbleEvent(node: TreeNodeData, e: MouseEvent) {
   emit('checkbox-click', node, e)
 }
+// esc点击事件
+function escKeyDown() {
+  if (props.senderElementId) {
+    const senderElement = document.getElementById(props.senderElementId);
+    if (senderElement) {
+      senderElement.focus()
+    }
+  }
+}
 
 // 上键点击事件
 function upKeyDown() {
-  rollUp(props.treeNode.tabIndex ?? 0)
+  recursionUp(props.treeNode.tabIndex ?? 0)
 }
-function rollUp(tabIndex: number) {
-  const nodeEle = document.querySelector('#' + props.treeId + '__' + (tabIndex - 1))
+function recursionUp(tabIndex: number) {
+  const nodeEle = document.getElementById(props.treeId + '__' + (tabIndex - 1))
   if (nodeEle) {
     nodeEle.focus()
   } else {
     if (tabIndex > 0) {
-      rollUp(tabIndex - 1)
-    } else {
-      if (props.senderElementId) {
-        const senderElement = document.querySelector('#' + props.senderElementId);
-        if (senderElement) {
-          senderElement.focus()
-        }
-      }
-      // 跳回
-      // emit('up-key-to-leave', props.treeNode)
+      recursionUp(tabIndex - 1)
     }
   }
 }
 
 // 下键点击事件
 function downKeyDown() {
-  rollDown(props.treeNode.tabIndex ?? 0)
+  recursionDown(props.treeNode.tabIndex ?? 0)
 }
-function rollDown(tabIndex: number) {
-  const domEle = document.querySelector('#' + props.treeId + '__' + (tabIndex + 1))
+function recursionDown(tabIndex: number) {
+  const domEle = document.getElementById(props.treeId + '__' + (tabIndex + 1))
   if (domEle) {
     domEle.focus()
   } else {
     if (tabIndex <= props.maxTabIndex && tabIndex <= Number.MAX_SAFE_INTEGER) {
-      rollDown(tabIndex + 1)
+      recursionDown(tabIndex + 1)
     }
   }
 }
@@ -316,18 +319,75 @@ function enterKeyDown() {
       || !props.onlyLeafCheck
     )
   ) {
-    const senderElement = document.querySelector('#' + props.senderElementId);
+    const senderElement = document.getElementById(props.senderElementId);
     if (senderElement) {
       senderElement.focus()
     }
   }
 }
+// 递归子节点展开
+function recursionExpandChildren(node: TreeNodeData) {
+  if (!node.expanded) {
+    node.expanded = true;
+  }
+  if (node.children && node.children.length > 0) {
+    node.children.forEach((item) => {
+      recursionExpandChildren(item)
+    })
+  }
+}
+// 递归子节点折叠
+function recursionCollapseChildren(node: TreeNodeData) {
+  if (node.expanded) {
+    node.expanded = false;
+  }
+  if (node.children && node.children.length > 0) {
+    node.children.forEach((item) => {
+      recursionCollapseChildren(item)
+    })
+  }
+}
 // 方向键右键事件
-function rightKeyDown() {
-  props.treeNode.expanded = true
+function rightKeyDown(e: KeyboardEvent) {
+  // 按下shift+ctrl则展开所有
+  if (e.ctrlKey && e.shiftKey) {
+    props.treeNodeList.forEach((item) => {
+      recursionExpandChildren(item)
+    })
+  }
+  // 按下shift则展开所有子节点
+  else if (e.shiftKey) {
+    recursionExpandChildren(props.treeNode)
+  } else {
+    props.treeNode.expanded = true
+  }
 }
 // 方向键左键事件
-function leftKeyDown() {
-  props.treeNode.expanded = false
+function leftKeyDown(e: KeyboardEvent) {
+  // 按下shift+ctrl则展开所有
+  if (e.ctrlKey && e.shiftKey) {
+    props.treeNodeList.forEach((item) => {
+      recursionCollapseChildren(item)
+    })
+    let parent = props.treeNode;
+    while (parent.__parent) {
+      parent = parent.__parent
+    }
+    const domElement = document.getElementById(props.treeId + "__" + parent.tabIndex);
+    if (domElement) {
+      domElement.focus()
+    } else {
+      const domElement = document.getElementById(props.treeId + "__1");
+      if (domElement) {
+        domElement.focus()
+      }
+    }
+  }
+  // 按下shift则展开所有子节点
+  else if (e.shiftKey) {
+    recursionCollapseChildren(props.treeNode)
+  } else {
+    props.treeNode.expanded = false
+  }
 }
 </script>

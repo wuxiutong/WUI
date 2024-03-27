@@ -76,8 +76,10 @@ export declare const WuiTree: {
         };
         treeId: {
             type: import("vue").PropType<string>;
-            required: true;
             default: () => string;
+        };
+        focusedId: {
+            type: import("vue").PropType<string | number>;
         };
         data: {
             type: import("vue").PropType<import("./type").TreeOriginalData[]>;
@@ -175,8 +177,10 @@ export declare const WuiTree: {
         };
         treeId: {
             type: import("vue").PropType<string>;
-            required: true;
             default: () => string;
+        };
+        focusedId: {
+            type: import("vue").PropType<string | number>;
         };
         data: {
             type: import("vue").PropType<import("./type").TreeOriginalData[]>;
@@ -300,8 +304,10 @@ export declare const WuiTree: {
         };
         treeId: {
             type: import("vue").PropType<string>;
-            required: true;
             default: () => string;
+        };
+        focusedId: {
+            type: import("vue").PropType<string | number>;
         };
         data: {
             type: import("vue").PropType<import("./type").TreeOriginalData[]>;
@@ -422,8 +428,10 @@ export declare const WuiTree: {
     };
     treeId: {
         type: import("vue").PropType<string>;
-        required: true;
         default: () => string;
+    };
+    focusedId: {
+        type: import("vue").PropType<string | number>;
     };
     data: {
         type: import("vue").PropType<import("./type").TreeOriginalData[]>;

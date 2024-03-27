@@ -1,12 +1,12 @@
 <template>
-  <div class="z-tree" :class="treeId">
+  <div class="z-tree" :id="treeId">
     <div v-if="!treeNodeData || treeNodeData.length <= 0" class="z-tree-empty-tips">
       <span>{{ emptyTips }}</span>
     </div>
     <tree-node v-else v-for="(node, index) in treeNodeData" :sender-element-id="senderElementId" :tree-id="treeId"
-      :max-tab-index="treeNodeList.length + 1" :key="node.id ? node.id : index" :treeNode="node" :cascade="cascade"
-      :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine" :expandAll="expandAll"
-      :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
+      :tree-node-list="treeNodeList" :max-tab-index="treeNodeList.length + 1" :key="node.id ? node.id : index"
+      :treeNode="node" :cascade="cascade" :showCheckbox="showCheckbox" :transition="transition" :showLine="showLine"
+      :expandAll="expandAll" :checkedAll="checkedAll" :multipleCheck="multipleCheck" :onlyLeafCheck="onlyLeafCheck"
       :enableDblclick="enableDblclick" :enableWholeAnchorStatus="enableWholeAnchorStatus"
       :enableCheckConfirm="enableCheckConfirm" :showId="showId" :idSeparator="idSeparator" :hideLeafIcon="hideLeafIcon"
       :hideExpander="hideExpander" :nodeContentClickAction="nodeContentClickAction" :checkedNodes="treeNodeChecked"
@@ -32,6 +32,7 @@ import {
   TreeEmits,
   TreeNodeContentClickActionEnum
 } from './type'
+import { addListener } from 'gulp';
 const emit = defineEmits<TreeEmits>()
 const props = withDefaults(defineProps<TreeProps>(), {
   data: () => {
@@ -88,6 +89,12 @@ watch(
   },
   {
     deep: true
+  }
+)
+watch(
+  () => props.focusedId,
+  () => {
+    changeFocus()
   }
 )
 watch(
@@ -148,10 +155,10 @@ watch(
 /**
  * 初始化树子节点
  * @param array 原始数据内容
- * @param parentNode
+ * @param __parentNode
  */
-function initChildren(array: TreeOriginalData[], parentNode: TreeNodeData | null, tabIndex: { index: number }) {
-  if (parentNode) {
+function initChildren(array: TreeOriginalData[], __parentNode: TreeNodeData | null, tabIndex: { index: number }) {
+  if (__parentNode) {
     array.forEach((item) => {
       let node: TreeNodeData = {
         label: item.label,
@@ -161,7 +168,7 @@ function initChildren(array: TreeOriginalData[], parentNode: TreeNodeData | null
         checked: 0,
         disabled: item.disabled,
         expanded: false,
-        parent: parentNode
+        __parent: __parentNode
       }
       // 添加默认选中项
       if (props.checkedKeys.filter((item) => node.id === item.id).length > 0) {
@@ -171,10 +178,10 @@ function initChildren(array: TreeOriginalData[], parentNode: TreeNodeData | null
       if (props.expandKeys.filter((item) => node.id === item.id).length > 0) {
         treeNodeExpand.value.push(node)
       }
-      if (parentNode.children === undefined) {
-        parentNode.children = []
+      if (__parentNode.children === undefined) {
+        __parentNode.children = []
       }
-      parentNode.children.push(node)
+      __parentNode.children.push(node)
       treeNodeList.value.push(node)
       if (item.children && item.children.length) {
         initChildren(item.children, node, tabIndex)
@@ -201,7 +208,7 @@ function initNode() {
       checked: 0,
       disabled: item.disabled,
       expanded: false,
-      parent: null
+      __parent: null
     }
     // 添加默认选中项
     if (props.checkedKeys.filter((item) => node.id === item.id).length > 0) {
@@ -224,7 +231,7 @@ function initNode() {
       if (checkedItem.children && checkedItem.children.length > 0) {
         changeChildrenCheckedStatus(checkedItem, 1)
       }
-      if (checkedItem.parent) {
+      if (checkedItem.__parent) {
         changeParentNodeStatus(checkedItem, 1)
       }
     }
@@ -233,8 +240,8 @@ function initNode() {
   treeNodeExpand.value.forEach((expandItem) => {
     if (expandItem.children && expandItem.children.length > 0) {
       expandItem.expanded = true
-      if (expandItem.parent) {
-        changeTreeParentNodeExpandStatus(expandItem.parent, true)
+      if (expandItem.__parent) {
+        changeTreeParentNodeExpandStatus(expandItem.__parent, true)
       }
     }
   })
@@ -250,8 +257,8 @@ function initNode() {
  */
 function changeTreeParentNodeExpandStatus(node: TreeNodeData, value: boolean) {
   node.expanded = value
-  if (node.parent) {
-    changeTreeParentNodeExpandStatus(node.parent, value)
+  if (node.__parent) {
+    changeTreeParentNodeExpandStatus(node.__parent, value)
   }
 }
 /**
@@ -307,7 +314,7 @@ function refreshCheckedNodes() {
         if (checkedItem.children && checkedItem.children.length > 0) {
           changeChildrenCheckedStatus(checkedItem, 1)
         }
-        if (checkedItem.parent) {
+        if (checkedItem.__parent) {
           changeParentNodeStatus(checkedItem, 1)
         }
       }
@@ -331,8 +338,8 @@ function refreshExpandNodes() {
   treeNodeExpand.value.forEach((expandItem) => {
     if (expandItem.children && expandItem.children.length > 0) {
       expandItem.expanded = true
-      if (expandItem.parent) {
-        changeTreeParentNodeExpandStatus(expandItem.parent, true)
+      if (expandItem.__parent) {
+        changeTreeParentNodeExpandStatus(expandItem.__parent, true)
       }
     }
   })
@@ -496,7 +503,7 @@ function nodeCheckOperate(node: TreeNodeData) {
               if (node.children && node.children.length > 0) {
                 changeChildrenCheckedStatus(node, node.checked)
               }
-              if (node.parent) {
+              if (node.__parent) {
                 changeParentNodeStatus(node, node.checked)
               }
             }
@@ -529,7 +536,7 @@ function nodeCheckOperate(node: TreeNodeData) {
             if (node.children && node.children.length > 0) {
               changeChildrenCheckedStatus(node, node.checked)
             }
-            if (node.parent) {
+            if (node.__parent) {
               changeParentNodeStatus(node, node.checked)
             }
           }
@@ -600,46 +607,84 @@ function changeChildrenCheckedStatus(item: TreeNodeData, value: TreeNodeCheckedT
  * @param value
  */
 function changeParentNodeStatus(item: TreeNodeData, value: TreeNodeCheckedType) {
-  if (item.parent) {
-    const oldValue = item.parent.checked
+  if (item.__parent) {
+    const oldValue = item.__parent.checked
     if (value === 0) {
       let checkValue = 0
-      item.parent.children?.some((child) => {
+      item.__parent.children?.some((child) => {
         if (child.checked === 1 || child.checked === 2) {
           checkValue = 2
           return true
         }
       })
-      item.parent.checked = checkValue as TreeNodeCheckedType;
+      item.__parent.checked = checkValue as TreeNodeCheckedType;
     } else if (value === 1) {
       let checkValue = 1
-      item.parent.children?.some((child) => {
+      item.__parent.children?.some((child) => {
         if (child.checked === 0 || child.checked === 2) {
           checkValue = 2
           return true
         }
       })
-      item.parent.checked = checkValue as TreeNodeCheckedType
+      item.__parent.checked = checkValue as TreeNodeCheckedType
     } else {
-      item.parent.checked = 2
+      item.__parent.checked = 2
     }
     // 选中列表中去除父节点
-    if (item.parent.checked !== 1) {
-      const index = treeNodeChecked.value.indexOf(item.parent)
+    if (item.__parent.checked !== 1) {
+      const index = treeNodeChecked.value.indexOf(item.__parent)
       if (index > -1) {
         treeNodeChecked.value.splice(index, 1)
       }
     } else if (!props.onlyLeafCheck) {
-      const index = treeNodeChecked.value.indexOf(item.parent)
+      const index = treeNodeChecked.value.indexOf(item.__parent)
       if (index <= -1) {
-        treeNodeChecked.value.push(item.parent)
+        treeNodeChecked.value.push(item.__parent)
       }
     }
-    if (oldValue !== item.parent.checked) {
-      changeParentNodeStatus(item.parent, value)
+    if (oldValue !== item.__parent.checked) {
+      changeParentNodeStatus(item.__parent, value)
     }
   }
 }
+// 根据id去查找dom，然后将焦点聚焦到该节点
+function changeFocus() {
+  if (props.focusedId) {
+    treeNodeList.value.some((item) => {
+      if (String(item.id) === String(props.focusedId)) {
+        const dom = document.getElementById(props.treeId + "__" + item.tabIndex);
+        if (dom) {
+          dom.focus();
+        } else {
+          // 展开所有父亲节点
+          recursionExpandParent(item)
+          // 再次尝试
+          setTimeout(() => {
+            const dom = document.getElementById(props.treeId + "__" + item.tabIndex);
+            if (dom) {
+              dom.focus();
+            } else {
+              // 实在不行就只能聚焦到第一个节点了
+              const dom = document.getElementById(props.treeId + "__1");
+              if (dom) {
+                dom.focus();
+              }
+            }
+          }, 100);
+        }
+        return true;
+      }
+    })
+  }
+}
+
+function recursionExpandParent(node: TreeNodeData) {
+  if (node.__parent) {
+    node.__parent.expanded = true;
+    recursionExpandParent(node.__parent)
+  }
+}
+
 initNode()
 
 </script>

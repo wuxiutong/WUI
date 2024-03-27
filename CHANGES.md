@@ -81,3 +81,26 @@ _2024-03-27_
 fixed TreeUtils bugs
 
 #### Features
+
+### 0.2.2
+
+_2024-03-27_
+
+#### Bug fixes
+
+none
+
+#### Features
+
+组件：WuiTree
+1、新增 shift+ctrl+left 键盘事件折叠所有节点。
+2、新增 shift+left 键盘事件折叠当前节点的所有子节点。
+3、新增 shift+ctrl+right 键盘事件展开所有节点。
+4、新增 shift+right 键盘事件展开当前节点的所有子节点。
+5、新增 esc 键盘事件替代方向键向上键返回焦点回到 Dom id 为 senderElementId 值的 dom 的功能。
+6、新增 focusedId 属性，通过给改属性赋值节点内容的 ID 值，焦点会自动跳转到指定节点，如果该节点的所有上级处于折叠状态，将自动展开，推荐使用先赋值然后定时清空。
+如下：
+focusedId.value = "2-3-1"
+setTimeout(() => {
+focusedId.value = ""
+}, 100)
