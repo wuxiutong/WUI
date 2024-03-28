@@ -650,8 +650,10 @@ function changeParentNodeStatus(item: TreeNodeData, value: TreeNodeCheckedType) 
 // 根据id去查找dom，然后将焦点聚焦到该节点
 function changeFocus() {
   if (props.focusedId) {
+    let hasExists = false;
     treeNodeList.value.some((item) => {
       if (String(item.id) === String(props.focusedId)) {
+        hasExists = true
         const dom = document.getElementById(props.treeId + "__" + item.tabIndex);
         if (dom) {
           dom.focus();
@@ -675,6 +677,13 @@ function changeFocus() {
         return true;
       }
     })
+    if (!hasExists) {
+      // 实在不行就只能聚焦到第一个节点了
+      const dom = document.getElementById(props.treeId + "__1");
+      if (dom) {
+        dom.focus();
+      }
+    }
   }
 }
 

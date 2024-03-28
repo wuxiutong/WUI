@@ -1,15 +1,14 @@
 .z-tree {
-  @arrow-icon-color-arrow: #a4a4a4;
-  @arrow-icon-color-plus-minus: #6e6e6e;
-  @content-color: #6e6e6e;
-  @default-font-size: 14px;
-  @default-theme-color: 237, 3, 9;
+  @--wui-arrow-icon-color-arrow: #a4a4a4;
+  @--wui-arrow-icon-color-plus-minus: #6e6e6e;
+  @--wui-content-color: #6e6e6e;
+  @--wui-default-font-size: 14px;
+  @--wui-default-theme-color: 237, 3, 9;
   // 外部给定的字体大小
-  @--font-size: var(--theme-font-size, @default-font-size);
+  @--wui-font-size: var(--wui-font-size, @--wui-default-font-size);
   // 外部给定的主体颜色值为 rgb格式，如：255,0,0
-  @--theme-color: var(--theme-primary-color, @default-theme-color);
-  @border-color: #c6c6c6;
-  @--wui-theme-color: @--theme-color;
+  @--wui-theme-color: var(--wui-primary-color, @--wui-default-theme-color);
+  @--wui-border-color: #c6c6c6;
   // 以下内容属于按照字体大小是14px的时候设置的各个组件的长宽高及边距等值，请勿携带单位。
   @z-tree-node--margin: 2;
   // tree节点高度
@@ -92,14 +91,14 @@
           .z-tree-node-anchor-arrow-expander-arrow-right {
             width: calc(@z-tree-node-anchor-arrow-expander--width - 2px);
             height: calc(@z-tree-node-anchor-arrow-expander--width - 2px);
-            border: 1px solid @arrow-icon-color-plus-minus;
-            color: @arrow-icon-color-plus-minus;
+            border: 1px solid @--wui-arrow-icon-color-plus-minus;
+            color: @--wui-arrow-icon-color-plus-minus;
           }
 
           .z-tree-node-anchor-arrow-expander-arrow-down,
           .z-tree-node-anchor-arrow-expander-arrow-right {
             border: none;
-            color: @arrow-icon-color-arrow;
+            color: @--wui-arrow-icon-color-arrow;
           }
         }
 
@@ -165,7 +164,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 1px solid @content-color;
+            border: 1px solid @--wui-content-color;
             border-radius: 2px;
           }
         }
@@ -181,7 +180,7 @@
       .z-tree-node-anchor-content {
         flex: 1 1 auto; /* 固定宽度，不允许缩放 */
         font-size: inherit;
-        color: @content-color;
+        color: @--wui-content-color;
         padding: 0 0 0 2px;
         margin-left: @z-tree-node-anchor-content--padding-left;
         height: 100%;
@@ -254,7 +253,7 @@
             justify-content: center;
             align-items: center;
             background-color: #f0f0f0;
-            border: 1px solid rgba(@content-color, 0.4);
+            border: 1px solid rgba(@--wui-content-color, 0.4);
             color: rgba(@--wui-theme-color, 1);
           }
         }
@@ -285,7 +284,7 @@
     );
     height: auto;
     bottom: 0;
-    border-left: 1px dashed @border-color;
+    border-left: 1px dashed @--wui-border-color;
   }
   // 第一个
   .z-tree-node-child .z-tree-node-line:first-child::before {
@@ -313,7 +312,7 @@
         @z-tree-node-child--padding-left + 2px
     );
     height: 1px;
-    border-top: 1px dashed @border-color;
+    border-top: 1px dashed @--wui-border-color;
   }
 
   /*
@@ -343,6 +342,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: @content-color;
+    color: @--wui-content-color;
   }
 }

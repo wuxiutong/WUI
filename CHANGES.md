@@ -104,3 +104,14 @@ focusedId.value = "2-3-1"
 setTimeout(() => {
 focusedId.value = ""
 }, 100)
+
+### 0.2.7
+
+_2024-03-28_
+
+#### Bug fixes
+
+1、修改字体大小 css 变量--theme-font-size 变更为--wui-font-size，
+2、修改主题色 css 变量--theme-primary-color 变更为--wui-primary-color
+
+#### Features

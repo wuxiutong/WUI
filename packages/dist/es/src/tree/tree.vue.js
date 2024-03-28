@@ -34,8 +34,8 @@ const G = ["id"], J = {
     focusedId: {}
   },
   emits: ["update:checkedKeys", "tree-node-click", "tree-node-checkbox-click"],
-  setup(B, { emit: w }) {
-    const f = w, a = B;
+  setup(B, { emit: m }) {
+    const f = m, a = B;
     let s = T([]);
     const r = x([]), c = x([]), h = x([]);
     u(
@@ -94,7 +94,7 @@ const G = ["id"], J = {
     ), u(
       () => a.expandKeys,
       () => {
-        S();
+        w();
       },
       {
         deep: !0
@@ -166,7 +166,7 @@ const G = ["id"], J = {
         l.checked = 1, a.multipleCheck && a.cascade && (l.children && l.children.length > 0 && o(l, 1), l.__parent && p(l, 1));
       }));
     }
-    function S() {
+    function w() {
       h.value = [], a.expandKeys.forEach((e) => {
         r.value.some((l) => {
           if (l.id === e.id)
@@ -176,7 +176,7 @@ const G = ["id"], J = {
         e.children && e.children.length > 0 && (e.expanded = !0, e.__parent && b(e.__parent, !0));
       });
     }
-    function m(e, l) {
+    function S(e, l) {
       if (a.nodeContentClickAction === y.NONE)
         f("tree-node-click", e, l);
       else {
@@ -185,7 +185,7 @@ const G = ["id"], J = {
         a.nodeContentClickAction === y.EXPAND && (e.expanded = !e.expanded), f("tree-node-click", e, l);
       }
     }
-    function D(e) {
+    function I(e) {
       if (a.enableDblclick) {
         if (a.onlyLeafCheck && e.children && e.children.length > 0)
           return !1;
@@ -229,7 +229,7 @@ const G = ["id"], J = {
         }
       });
     }
-    function I(e) {
+    function D(e) {
       const l = h.value.indexOf(e);
       e.expanded ? (e.expanded = !1, l > -1 && h.value.splice(l, 1)) : (e.expanded = !0, l <= -1 && h.value.push(e));
     }
@@ -269,20 +269,27 @@ const G = ["id"], J = {
       }
     }
     function O() {
-      a.focusedId && r.value.some((e) => {
-        if (String(e.id) === String(a.focusedId)) {
-          const l = document.getElementById(a.treeId + "__" + e.tabIndex);
-          return l ? l.focus() : (K(e), setTimeout(() => {
-            const n = document.getElementById(a.treeId + "__" + e.tabIndex);
-            if (n)
-              n.focus();
-            else {
-              const i = document.getElementById(a.treeId + "__1");
-              i && i.focus();
-            }
-          }, 100)), !0;
+      if (a.focusedId) {
+        let e = !1;
+        if (r.value.some((l) => {
+          if (String(l.id) === String(a.focusedId)) {
+            e = !0;
+            const n = document.getElementById(a.treeId + "__" + l.tabIndex);
+            return n ? n.focus() : (K(l), setTimeout(() => {
+              const i = document.getElementById(a.treeId + "__" + l.tabIndex);
+              if (i)
+                i.focus();
+              else {
+                const t = document.getElementById(a.treeId + "__1");
+                t && t.focus();
+              }
+            }, 100)), !0;
+          }
+        }), !e) {
+          const l = document.getElementById(a.treeId + "__1");
+          l && l.focus();
         }
-      });
+      }
     }
     function K(e) {
       e.__parent && (e.__parent.expanded = !0, K(e.__parent));
@@ -319,9 +326,9 @@ const G = ["id"], J = {
         checkedNodes: c.value,
         expandKeys: e.expandKeys,
         onCheckboxClick: L,
-        "onUpdate:expandNode": I,
-        onNodeClick: m,
-        onNodeDblclick: D
+        "onUpdate:expandNode": D,
+        onNodeClick: S,
+        onNodeDblclick: I
       }, {
         default: U((t) => [
           X(e.$slots, "default", {

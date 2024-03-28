@@ -110,9 +110,9 @@
   align-items: center;
   color: #fff;
   padding: 0;
-  border: 1px solid rgba(var(--theme-primary-color, 237, 3, 9), 1);
+  border: 1px solid rgba(var(--wui-primary-color, 237, 3, 9), 1);
   border-radius: 2px;
-  background-color: rgba(var(--theme-primary-color, 237, 3, 9), 1);
+  background-color: rgba(var(--wui-primary-color, 237, 3, 9), 1);
 }
 .z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-unchecked {
   margin: 0;
@@ -167,14 +167,14 @@
   margin-left: 0;
 }
 .z-tree .z-tree-node .z-tree-node-anchor .z-tree-node-anchor-content:hover {
-  background: rgba(var(--theme-primary-color, 237, 3, 9), 20%);
+  background: rgba(var(--wui-primary-color, 237, 3, 9), 20%);
 }
 .z-tree .z-tree-node .z-tree-node-anchor:focus {
   outline: none;
 }
 .z-tree .z-tree-node .z-tree-node-anchor:focus .z-tree-node-anchor-content {
-  outline: 1px solid rgba(var(--theme-primary-color, 237, 3, 9), 40%);
-  background: rgba(var(--theme-primary-color, 237, 3, 9), 20%);
+  outline: 1px solid rgba(var(--wui-primary-color, 237, 3, 9), 40%);
+  background: rgba(var(--wui-primary-color, 237, 3, 9), 20%);
 }
 .z-tree .z-tree-node .z-tree-node-anchor-disabled {
   cursor: not-allowed;
@@ -188,8 +188,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgba(var(--theme-primary-color, 237, 3, 9), 0.6);
-  color: rgba(var(--theme-primary-color, 237, 3, 9), 0.6);
+  border: 1px solid rgba(var(--wui-primary-color, 237, 3, 9), 0.6);
+  color: rgba(var(--wui-primary-color, 237, 3, 9), 0.6);
 }
 .z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-checkbox .z-tree-node-anchor-checkbox-icon .z-tree-node-anchor-checkbox-icon-unchecked {
   display: flex;
@@ -197,7 +197,7 @@
   align-items: center;
   background-color: #f0f0f0;
   border: 1px solid rgba(110, 110, 110, 0.4);
-  color: rgba(var(--theme-primary-color, 237, 3, 9), 1);
+  color: rgba(var(--wui-primary-color, 237, 3, 9), 1);
 }
 .z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-separator,
 .z-tree .z-tree-node .z-tree-node-anchor-disabled .z-tree-node-anchor-id,
@@ -206,7 +206,7 @@
   white-space: pre;
 }
 .z-tree .z-tree-node .z-tree-node-anchor-selected {
-  background-color: rgba(var(--theme-primary-color, 237, 3, 9), 0.453);
+  background-color: rgba(var(--wui-primary-color, 237, 3, 9), 0.453);
 }
 .z-tree .z-tree-node-child .z-tree-node-line::before {
   content: '';
