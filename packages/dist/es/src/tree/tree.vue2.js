@@ -1,5 +1,4 @@
-import o from "./tree.vue.js";
-import "/Users/wxtong/Documents/DevelopWorkBranch/WebProjects/WUI/packages/components/src/tree/tree.vue?vue&type=style&index=0&lang.css";
+import f from "./tree.vue.js";
 export {
-  o as default
+  f as default
 };

@@ -1,6 +1,6 @@
 {
   "name": "@wuxiutong/wui",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "A vue3+ts ui component lib,include tree,selectTree and than!",
   "main": "lib/index.js",
   "module": "es/index.js",

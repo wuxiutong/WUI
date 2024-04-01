@@ -19,6 +19,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import './style/tree.less'
 defineOptions({ name: "wui-tree" })
 import { ref, defineProps, watch, reactive } from 'vue'
 import { randomString } from '../utils'
@@ -32,7 +33,6 @@ import {
   TreeEmits,
   TreeNodeContentClickActionEnum
 } from './type'
-import { addListener } from 'gulp';
 const emit = defineEmits<TreeEmits>()
 const props = withDefaults(defineProps<TreeProps>(), {
   data: () => {
@@ -697,10 +697,3 @@ function recursionExpandParent(node: TreeNodeData) {
 initNode()
 
 </script>
-<style lang="less">
-.z-tree {
-  position: relative;
-  height: auto;
-  width: auto;
-}
-</style>./type

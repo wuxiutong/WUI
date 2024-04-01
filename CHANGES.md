@@ -115,3 +115,13 @@ _2024-03-28_
 2、修改主题色 css 变量--theme-primary-color 变更为--wui-primary-color
 
 #### Features
+
+### 0.2.8
+
+_2024-04-01_
+
+#### Bug fixes
+
+1、修复 tree.vue 中样式导致无法在其他电脑运行的 bug。
+
+#### Features

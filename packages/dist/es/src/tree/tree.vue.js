@@ -1,11 +1,12 @@
 import { defineComponent as P, reactive as T, ref as x, watch as u, openBlock as C, createElementBlock as g, unref as v, createElementVNode as V, toDisplayString as W, Fragment as z, renderList as F, createBlock as H, withCtx as U, renderSlot as X } from "vue";
+import "./style/tree.css";
 import j from "./tree-node.vue.js";
 import { TreeNodeContentClickActionEnum as y } from "./type.js";
 import { randomString as q } from "../utils/random.js";
 const G = ["id"], J = {
   key: 0,
   class: "z-tree-empty-tips"
-}, Z = /* @__PURE__ */ P({
+}, $ = /* @__PURE__ */ P({
   name: "wui-tree",
   __name: "tree",
   props: {
@@ -341,5 +342,5 @@ const G = ["id"], J = {
   }
 });
 export {
-  Z as default
+  $ as default
 };
